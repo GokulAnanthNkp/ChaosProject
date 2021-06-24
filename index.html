@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard</title>
 
+  <!-- Theme style for progress bar -->
+  <link rel="stylesheet" href="dist/css/progress.css">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -204,10 +206,28 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Main row -->
-        <div class="row">
-          
-        </div>
-        <!-- /.row (main row) -->
+            <div class="stepper-wrapper">
+                <div class="stepper-item completed">
+                  <div class="step-counter"><i class="fas fa-check"></i></div>
+                  <div class="step-name">First</div>
+                </div>
+                <div class="stepper-item completed">
+                  <div class="step-counter"><i class="fas fa-check"></i></div>
+                  <div class="step-name">Second</div>
+                </div>
+                <div class="stepper-item active">
+                  <div class="step-counter">3</div>
+                  <div class="step-name">Third</div>
+                </div>
+                <div class="stepper-item">
+                  <div class="step-counter">4</div>
+                  <div class="step-name">Fourth</div>
+                </div>
+                <div class="stepper-item">
+                    <div class="step-counter">5</div>
+                    <div class="step-name">Fifth</div>
+                </div>
+              </div>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
