@@ -6,34 +6,34 @@
   <title>Dashboard</title>
 
   <!-- Theme style for progress bar -->
-  <link rel="stylesheet" href="dist/css/progress.css">
+  <link rel="stylesheet" href="/public/dist/css/progress.css">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/public/plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <link rel="stylesheet" href="/public/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
   <!-- iCheck -->
-  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <link rel="stylesheet" href="/public/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- JQVMap -->
-  <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
+  <link rel="stylesheet" href="/public/plugins/jqvmap/jqvmap.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="/public/dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <link rel="stylesheet" href="/public/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
-  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
-  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="/public/plugins/summernote/summernote-bs4.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/HavocLogo.png" alt="HavocLogo" height="60" width="60">
+    <img class="animation__shake" src="/public/dist/img/HavocLogo.png" alt="HavocLogo" height="60" width="60">
   </div>
 
   <!-- Top Horizontal Navbar -->
@@ -44,7 +44,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index.html" class="nav-link">Home</a>
+        <a href="/" class="nav-link">Home</a>
       </li>
     </ul>
 
@@ -79,8 +79,8 @@
   <!-- Left Side Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
-      <img src="dist/img/HavocLogo.png" alt="Havoc Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <a href="/" class="brand-link">
+      <img src="/public/dist/img/HavocLogo.png" alt="Havoc Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Havoc</span>
     </a>
 
@@ -111,7 +111,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="" class="nav-link">
+                  <a href="/auth" class="nav-link">
                   <i class="fab fa-aws nav-icon"></i>
                   <p>AWS</p>
                 </a>
@@ -189,12 +189,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Dashboard</h1>
+            <h1 class="m-0">AWS Chaos</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item active">AWS</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -207,11 +207,11 @@
       <div class="container-fluid">
         <!-- Main row -->
             <div class="stepper-wrapper">
-                <div class="stepper-item completed">
-                  <div class="step-counter"><i class="fas fa-check"></i></div>
+                <div class="stepper-item active">
+                  <div class="step-counter">1</div>
                   <div class="step-name">First</div>
                 </div>
-                <div class="stepper-item active">
+                <div class="stepper-item">
                   <div class="step-counter">2</div>
                   <div class="step-name">Second</div>
                 </div>
@@ -231,18 +231,22 @@
       </div><!-- /.container-fluid -->
     <div  style="padding-left:25%; padding-right:25%;">
         <div class="card card-primary">
-            <form action="">
+            <form action="" method="POST">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="service">Choose the Target Service:</label>
-                        <select name="service" class="form-control" id="service">
-                            <option disabled selected>Choose the required service</option>
-                            <option>AWS EC2</option>
-                        </select> 
+                        <label for="service">Enter access key:</label>
+                        <input type='text' name="access_key" class="form-control" id="access_key" placeholder="Enter access key">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Enter secret access key:</label>
+                        <input type='text' name="secret_access_key" class="form-control" id="secret_access_key" placeholder="Enter secret access key">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Enter region:</label>
+                        <input type='text' name="region" class="form-control" id="region" placeholder="Enter region">
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-default">Previous</button>
                     <button type="submit" class="btn btn-primary float-right">Next</button>
                 </div>
             </form>
@@ -263,35 +267,35 @@
 
 
 <!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
+<script src="/public/plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="/public/plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<script src="/public/plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="/public/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
 <!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+<script src="/public/plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- daterangepicker -->
-<script src="plugins/moment/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/public/plugins/moment/moment.min.js"></script>
+<script src="/public/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="/public/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
+<script src="/public/plugins/summernote/summernote-bs4.min.js"></script>
 <!-- overlayScrollbars -->
-<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/public/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="dist/js/adminlte.js"></script>
+<script src="/public/dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
+<script src="/public/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
+<script src="/public/dist/js/pages/dashboard.js"></script>
 </body>
 </html>
