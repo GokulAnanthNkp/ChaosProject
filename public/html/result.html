@@ -221,11 +221,11 @@
                   <div class="step-counter">3</div>
                   <div class="step-name">Choose activity</div>
                 </div>
-                <div class="stepper-item active">
+                <div class="stepper-item completed">
                   <div class="step-counter">4</div>
                   <div class="step-name">Tune parameters</div>
                 </div>
-                <div class="stepper-item">
+                <div class="stepper-item active">
                     <div class="step-counter">5</div>
                     <div class="step-name">View result</div>
                 </div>
@@ -233,35 +233,15 @@
       </div><!-- /.container-fluid -->
     <div  style="padding-left:20%; padding-right:20%;">
         <div class="card card-primary">
-            <form action="" method="POST">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="instance_ids">Enter instances to be stopped(separated by a comma):</label>
-                        <input type='text' name="instance_ids" class="form-control" id="instance_ids" placeholder="Enter instance ids" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="az">Availability zone:</label>
-                        <input type='text' name="az" class="form-control" id="az" placeholder="Enter availability zone">
-                    </div>
-                    <div class="form-group">
-                        <label for="filters">Enter filters(separated by a comma):</label>
-                        <input type='text' name="filters" class="form-control" id="filters" placeholder="Enter filters">
-                    </div>
-                    <div class="form-group">
-                        <div class="custom-control custom-switch custom-switch-on-success">
-                            <input type="checkbox" name="force" class="custom-control-input" id="force">
-                            <label class="custom-control-label" for="force">Use force?</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="/aws/ec2" class="btn btn-default">Previous</a>
-                    <button type="submit" class="btn btn-primary float-right">Next</>
-                </div>
-            </form>
-            
+
+
         </div>
       </div>
+    <!-- <form action="">
+        <label for="exp">Choose the Experiment Type:</label>
+        <select name="exp" id="exp" style="width: 300px;">
+        </select>
+    </form> -->
 
     </section>
     <!-- /.content -->

@@ -16,8 +16,6 @@ router.post('/aws/auth', (req, res) => {
     console.log(req.body.secret_access_key)
     console.log(req.body.region)
     res.redirect('/aws/auth_success')
-    // console.log(req.body.service)
-    // res.sendFile(path.join(__dirname , 'public', 'html', 'auth_suc2.html'))
 })
 
 router.get('/aws/auth_success', (req, res) => {
@@ -41,15 +39,58 @@ router.get('/aws/ec2', (req, res) => {
 router.post('/aws/ec2', (req, res) => {
     console.log(req.body.module)
     if(req.body.module === 'stop_instances'){
-        res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_stop.html'))
+        res.redirect('/aws/ec2_stop')
     }
     if(req.body.module === 'terminate_instances'){
-        res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_terminate.html'))
+        res.redirect('/aws/ec2_terminate')
     }
     if(req.body.module === 'start_instances'){
-        res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_start.html'))
+        res.redirect('/aws/ec2_start')
     }
 })
 
+router.get('/aws/ec2_stop', (req, res) => {
+    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_stop.html'))
+})
+
+router.post('/aws/ec2_stop', (req, res) => {
+    console.log(req.body.instance_ids)
+    console.log(req.body.az)
+    console.log(req.body.filters)
+    if (req.body.force) {
+        console.log("true");
+    } else {
+            console.log("false");
+    }
+    res.redirect('/aws/result')
+})
+
+router.get('/aws/ec2_terminate', (req, res) => {
+    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_terminate.html'))
+})
+
+router.post('/aws/ec2_terminate', (req, res) => {
+    console.log(req.body.instance_ids)
+    console.log(req.body.az)
+    console.log(req.body.filters)
+    res.redirect('/aws/result')
+})
+
+
+router.get('/aws/ec2_start', (req, res) => {
+    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_start.html'))
+})
+
+router.post('/aws/ec2_start', (req, res) => {
+    console.log(req.body.instance_ids)
+    console.log(req.body.az)
+    console.log(req.body.filters)
+    res.redirect('/aws/result')
+})
+
+
+router.get('/aws/result', (req, res) => {
+    res.sendFile(path.join(__dirname , 'public', 'html', 'result.html'))
+})
 
 module.exports = router
