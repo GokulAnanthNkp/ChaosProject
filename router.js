@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const router = express.Router()
 
@@ -12,10 +13,29 @@ router.get('/aws/auth', (req, res) => {
 })
 
 router.post('/aws/auth', (req, res) => {
-    console.log(req.body.access_key)
-    console.log(req.body.secret_access_key)
-    console.log(req.body.region)
-    res.redirect('/aws/auth_success')
+    var authenticate = new Promise((resolve, reject) => {
+        data = `[default] \naws_access_key_id = ${req.body.access_key} \naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
+        done = true
+        fs.writeFile('/home/harshal1711/.aws/credentials', data, (err)=>{
+            if(err) {
+                done = false
+            }
+        })
+        if (done) {
+            resolve();
+        }
+        else{
+            reject('Error in updating authentication file')
+        }
+    });
+    
+    authenticate.then(function () {
+        res.redirect('/aws/auth_success')
+    }).catch((err) => {
+        console.log(err)
+        res.redirect('/aws/auth_success')
+        window.alert("Error updating authentication details")
+    });
 })
 
 router.get('/aws/auth_success', (req, res) => {
