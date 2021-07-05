@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const fetch = require("node-fetch");
+const { exec } = require('child_process')
+const { PythonShell } = require('python-shell')
 
 const router = express.Router()
 
@@ -14,9 +17,18 @@ router.get('/aws/auth', (req, res) => {
 
 router.post('/aws/auth', (req, res) => {
     var authenticate = new Promise((resolve, reject) => {
-        data = `[default] \naws_access_key_id = ${req.body.access_key} \naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
+        data1 = `[default] \naws_access_key_id = ${req.body.access_key} \naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
+        data2 = `[default] \nregion = ${req.body.region}`
         done = true
-        fs.writeFile('/home/harshal1711/.aws/credentials', data, (err)=>{
+        PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
+            if (err) throw err;
+        })
+        fs.writeFile('/home/harshal1711/.aws/credentials', data1, (err)=>{
+            if(err) {
+                done = false
+            }
+        })
+        fs.writeFile('/home/harshal1711/.aws/config', data2, (err)=>{
             if(err) {
                 done = false
             }
@@ -74,15 +86,38 @@ router.get('/aws/ec2_stop', (req, res) => {
 })
 
 router.post('/aws/ec2_stop', (req, res) => {
-    console.log(req.body.instance_ids)
-    console.log(req.body.az)
-    console.log(req.body.filters)
-    if (req.body.force) {
-        console.log("true");
-    } else {
-            console.log("false");
+    json_req = `{"service": "ec2", "exp": "stop_instances"`
+    if(req.body.instance_ids){
+        json_req += `,"id": "${req.body.instance_ids.split(",")}"`
+    }    
+    if(req.body.az){
+        json_req += `,"az": "${req.body.az}"`
+    }    
+    if(req.body.filters){
+        json_req += `,"filters": "${req.body.filters.split(",")}"`
+    }    
+    if(req.body.force){
+        json_req += `,"force": true`
+    }    
+    json_req += `}`
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.json())
+        .then(json => console.log(json))
+        // return response
     }
-    res.redirect('/aws/result')
+    
+    fetch_api().then(response => {
+        // console.log(response)
+        res.redirect('/aws/result')
+    })
 })
 
 router.get('/aws/ec2_terminate', (req, res) => {
