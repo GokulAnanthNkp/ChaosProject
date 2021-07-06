@@ -129,7 +129,6 @@ router.post('/aws/ec2_stop', (req, res) => {
     }
     
     fetch_api().then(response => {
-        // console.log(response)
         res.redirect('/aws/result')
     })
 })
@@ -162,7 +161,6 @@ router.post('/aws/ec2_terminate', (req, res) => {
     }
     
     fetch_api().then(response => {
-        // console.log(response)
         res.redirect('/aws/result')
     })
 })
@@ -196,7 +194,6 @@ router.post('/aws/ec2_start', (req, res) => {
     }
     
     fetch_api().then(response => {
-        // console.log(response)
         res.redirect('/aws/result')
     })
 })
@@ -230,7 +227,6 @@ router.post('/aws/ec2_restart', (req, res) => {
     }
     
     fetch_api().then(response => {
-        // console.log(response)
         res.redirect('/aws/result')
     })
 })
@@ -241,9 +237,12 @@ router.get('/aws/ec2_describe', (req, res) => {
 
 router.post('/aws/ec2_describe', (req, res) => {
     json_req = `{"service": "ec2", "exp": "describe_instances"`
-    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `, "filters": [{`
+    json_req += `"Name" : "${req.body.filter_name}"`
+    json_req += `, "Values" : ${JSON.stringify(req.body.filter_value.split(","))}}]`
     json_req += `}`
     
+    console.log(json_req)
     async function fetch_api(){
         const response = await fetch('http://127.0.0.1:5000/', {
             method: 'POST',
@@ -255,11 +254,14 @@ router.post('/aws/ec2_describe', (req, res) => {
         // .then(res => res.json())
         // .then(json => console.log(json))
         .then(res => res.text())
-        .then(body => console.log(body))
+        .then(json => {
+            console.log(json)
+            sess = req.session
+            sess['json_response'] = JSON.stringify(json, null, 4)
+        })
     }
     
     fetch_api().then(response => {
-        // console.log(response)
         res.redirect('/aws/result')
     })
 })
