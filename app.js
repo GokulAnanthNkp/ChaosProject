@@ -3,9 +3,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const router = require('./router');
+const session = require('express-session');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true })); 
+
+app.use(session({secret: 'test_session', resave: true, saveUninitialized: true}))
+
+app.set('view engine', 'ejs')
 
 app.use(cookieParser())
 

@@ -236,16 +236,8 @@
             <form action="" method="POST">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="instance_ids">Enter instances to be terminated(separated by a comma):</label>
-                        <input type='text' name="instance_ids" class="form-control" id="instance_ids" placeholder="Enter instance ids" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="az">Availability zone:</label>
-                        <input type='text' name="az" class="form-control" id="az" placeholder="Enter availability zone">
-                    </div>
-                    <div class="form-group">
-                        <label for="filters">Enter filters(separated by a comma):</label>
-                        <input type='text' name="filters" class="form-control" id="filters" placeholder="Enter filters">
+                        <label for="filters">Enter filters(separated by a comma): <i class="fas fa-asterisk"></i></label>
+                        <input type='text' name="filters" class="form-control" id="filters" placeholder="Enter filters" required>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -256,12 +248,6 @@
             
         </div>
       </div>
-    <!-- <form action="">
-        <label for="exp">Choose the Experiment Type:</label>
-        <select name="exp" id="exp" style="width: 300px;">
-        </select>
-    </form> -->
-
     </section>
     <!-- /.content -->
   </div>

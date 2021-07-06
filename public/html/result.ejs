@@ -208,52 +208,34 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Main row -->
-            <div class="stepper-wrapper">
-                <div class="stepper-item completed">
-                  <div class="step-counter"><i class="fas fa-check"></i></div>
-                  <div class="step-name">AWS settings</div>
-                </div>
-                <div class="stepper-item completed">
-                  <div class="step-counter"><i class="fas fa-check"></i></div>
-                  <div class="step-name">Choose service</div>
-                </div>
-                <div class="stepper-item completed">
-                  <div class="step-counter"><i class="fas fa-check"></i></div>
-                  <div class="step-name">Choose activity</div>
-                </div>
-                <div class="stepper-item active">
-                  <div class="step-counter">4</div>
-                  <div class="step-name">Tune parameters</div>
-                </div>
-                <div class="stepper-item">
-                    <div class="step-counter">5</div>
-                    <div class="step-name">View result</div>
-                </div>
-              </div>
+        <div class="stepper-wrapper">
+            <div class="stepper-item completed">
+              <div class="step-counter"><i class="fas fa-check"></i></div>
+              <div class="step-name">AWS settings</div>
+            </div>
+            <div class="stepper-item completed">
+              <div class="step-counter"><i class="fas fa-check"></i></div>
+              <div class="step-name">Choose service</div>
+            </div>
+            <div class="stepper-item completed">
+              <div class="step-counter"><i class="fas fa-check"></i></div>
+              <div class="step-name">Choose activity</div>
+            </div>
+            <div class="stepper-item completed">
+              <div class="step-counter"><i class="fas fa-check"></i></div>
+              <div class="step-name">Tune parameters</div>
+            </div>
+            <div class="stepper-item active">
+                <div class="step-counter">5</div>
+                <div class="step-name">View result</div>
+            </div>
+          </div>
       </div><!-- /.container-fluid -->
-    <div  style="padding-left:20%; padding-right:20%;">
+    <div  style="padding-left:10%; padding-right:10%;">
         <div class="card card-primary">
-            <form action="" method="POST">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="instance_ids">Enter instances to be terminated(separated by a comma):</label>
-                        <input type='text' name="instance_ids" class="form-control" id="instance_ids" placeholder="Enter instance ids" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="az">Availability zone:</label>
-                        <input type='text' name="az" class="form-control" id="az" placeholder="Enter availability zone">
-                    </div>
-                    <div class="form-group">
-                        <label for="filters">Enter filters(separated by a comma):</label>
-                        <input type='text' name="filters" class="form-control" id="filters" placeholder="Enter filters">
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="/aws/ec2" class="btn btn-default">Previous</a>
-                    <button type="submit" class="btn btn-primary float-right">Next</>
-                </div>
-            </form>
-            
+            <div class="card-body">
+                <p><%= json_response %></p>
+            </div>
         </div>
       </div>
     <!-- <form action="">

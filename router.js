@@ -1,9 +1,14 @@
+/**
+ * line 29,32,37
+ */
+
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const fetch = require("node-fetch");
 const { exec } = require('child_process')
 const { PythonShell } = require('python-shell')
+const session = require('express-session')
 
 const router = express.Router()
 
@@ -79,6 +84,12 @@ router.post('/aws/ec2', (req, res) => {
     if(req.body.module === 'start_instances'){
         res.redirect('/aws/ec2_start')
     }
+    if(req.body.module === 'restart_instances'){
+        res.redirect('/aws/ec2_restart')
+    }
+    if(req.body.module === 'describe_instances'){
+        res.redirect('/aws/ec2_describe')
+    }
 })
 
 router.get('/aws/ec2_stop', (req, res) => {
@@ -87,19 +98,17 @@ router.get('/aws/ec2_stop', (req, res) => {
 
 router.post('/aws/ec2_stop', (req, res) => {
     json_req = `{"service": "ec2", "exp": "stop_instances"`
-    if(req.body.instance_ids){
-        json_req += `,"id": "${req.body.instance_ids.split(",")}"`
-    }    
-    if(req.body.az){
-        json_req += `,"az": "${req.body.az}"`
-    }    
-    if(req.body.filters){
-        json_req += `,"filters": "${req.body.filters.split(",")}"`
-    }    
+    json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
+    json_req += `,"az": "${req.body.az}"`
+    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
     if(req.body.force){
         json_req += `,"force": true`
-    }    
+    }
+    else{
+        json_req += `,"force": false`
+    }
     json_req += `}`
+    console.log(json_req)
     
     async function fetch_api(){
         const response = await fetch('http://127.0.0.1:5000/', {
@@ -110,8 +119,13 @@ router.post('/aws/ec2_stop', (req, res) => {
             body: json_req,
         })
         .then(res => res.json())
-        .then(json => console.log(json))
-        // return response
+        .then(json => {
+            console.log(json)
+            sess = req.session
+            sess['json_response'] = JSON.stringify(json, null, 4)
+        })
+        // .then(res => res.text())
+        // .then(body => console.log(body))
     }
     
     fetch_api().then(response => {
@@ -125,10 +139,32 @@ router.get('/aws/ec2_terminate', (req, res) => {
 })
 
 router.post('/aws/ec2_terminate', (req, res) => {
-    console.log(req.body.instance_ids)
-    console.log(req.body.az)
-    console.log(req.body.filters)
-    res.redirect('/aws/result')
+    json_req = `{"service": "ec2", "exp": "terminate_instances"`
+    json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
+    json_req += `,"az": "${req.body.az}"`
+    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `}`
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log(json)
+            sess = req.session
+            sess['json_response'] = JSON.stringify(json, null, 4)
+        })
+    }
+    
+    fetch_api().then(response => {
+        // console.log(response)
+        res.redirect('/aws/result')
+    })
 })
 
 
@@ -137,15 +173,102 @@ router.get('/aws/ec2_start', (req, res) => {
 })
 
 router.post('/aws/ec2_start', (req, res) => {
-    console.log(req.body.instance_ids)
-    console.log(req.body.az)
-    console.log(req.body.filters)
-    res.redirect('/aws/result')
+    json_req = `{"service": "ec2", "exp": "start_instances"`
+    json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
+    json_req += `,"az": "${req.body.az}"`
+    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `}`
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log(json)
+            sess = req.session
+            sess['json_response'] = JSON.stringify(json, null, 4)
+        })
+    }
+    
+    fetch_api().then(response => {
+        // console.log(response)
+        res.redirect('/aws/result')
+    })
 })
 
 
+router.get('/aws/ec2_restart', (req, res) => {
+    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_restart.html'))
+})
+
+router.post('/aws/ec2_restart', (req, res) => {
+    json_req = `{"service": "ec2", "exp": "restart_instances"`
+    json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
+    json_req += `,"az": "${req.body.az}"`
+    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `}`
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.text())
+        .then(json => {
+            console.log(json)
+            sess = req.session
+            sess['json_response'] = JSON.stringify(json, null, 4)
+        })
+    }
+    
+    fetch_api().then(response => {
+        // console.log(response)
+        res.redirect('/aws/result')
+    })
+})
+
+router.get('/aws/ec2_describe', (req, res) => {
+    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_describe.html'))
+})
+
+router.post('/aws/ec2_describe', (req, res) => {
+    json_req = `{"service": "ec2", "exp": "describe_instances"`
+    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `}`
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        // .then(res => res.json())
+        // .then(json => console.log(json))
+        .then(res => res.text())
+        .then(body => console.log(body))
+    }
+    
+    fetch_api().then(response => {
+        // console.log(response)
+        res.redirect('/aws/result')
+    })
+})
+
 router.get('/aws/result', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'result.html'))
+    console.log(sess['json_response'])
+    res.render(path.join(__dirname , 'public', 'html', 'result.ejs'), {
+        json_response: sess['json_response']
+    })
 })
 
 module.exports = router
