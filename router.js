@@ -100,7 +100,9 @@ router.post('/aws/ec2_stop', (req, res) => {
     json_req = `{"service": "ec2", "exp": "stop_instances"`
     json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
     json_req += `,"az": "${req.body.az}"`
-    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `, "filters": [{`
+    json_req += `"Name" : "${req.body.filter_name}"`
+    json_req += `, "Values" : ${JSON.stringify(req.body.filter_value.split(","))}}]`
     if(req.body.force){
         json_req += `,"force": true`
     }
@@ -120,12 +122,12 @@ router.post('/aws/ec2_stop', (req, res) => {
         })
         .then(res => res.json())
         .then(json => {
-            console.log(json)
+            // console.log(json)
             sess = req.session
-            sess['json_response'] = JSON.stringify(json, null, 4)
+            sess['json_type'] = 'stop'
+            sess['json_response'] = json
+            console.log(sess['json_response'].StoppingInstances.length)
         })
-        // .then(res => res.text())
-        // .then(body => console.log(body))
     }
     
     fetch_api().then(response => {
@@ -141,7 +143,9 @@ router.post('/aws/ec2_terminate', (req, res) => {
     json_req = `{"service": "ec2", "exp": "terminate_instances"`
     json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
     json_req += `,"az": "${req.body.az}"`
-    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `, "filters": [{`
+    json_req += `"Name" : "${req.body.filter_name}"`
+    json_req += `, "Values" : ${JSON.stringify(req.body.filter_value.split(","))}}]`
     json_req += `}`
     
     async function fetch_api(){
@@ -156,7 +160,8 @@ router.post('/aws/ec2_terminate', (req, res) => {
         .then(json => {
             console.log(json)
             sess = req.session
-            sess['json_response'] = JSON.stringify(json, null, 4)
+            sess['json_type'] = 'terminate'
+            sess['json_response'] = json
         })
     }
     
@@ -174,7 +179,9 @@ router.post('/aws/ec2_start', (req, res) => {
     json_req = `{"service": "ec2", "exp": "start_instances"`
     json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
     json_req += `,"az": "${req.body.az}"`
-    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `, "filters": [{`
+    json_req += `"Name" : "${req.body.filter_name}"`
+    json_req += `, "Values" : ${JSON.stringify(req.body.filter_value.split(","))}}]`
     json_req += `}`
     
     async function fetch_api(){
@@ -189,7 +196,8 @@ router.post('/aws/ec2_start', (req, res) => {
         .then(json => {
             console.log(json)
             sess = req.session
-            sess['json_response'] = JSON.stringify(json, null, 4)
+            sess['json_type'] = 'start'
+            sess['json_response'] = json
         })
     }
     
@@ -207,7 +215,9 @@ router.post('/aws/ec2_restart', (req, res) => {
     json_req = `{"service": "ec2", "exp": "restart_instances"`
     json_req += `,"id": ${JSON.stringify(req.body.instance_ids.split(","))}`
     json_req += `,"az": "${req.body.az}"`
-    json_req += `,"filters": ${JSON.stringify(req.body.filters.split(","))}`
+    json_req += `, "filters": [{`
+    json_req += `"Name" : "${req.body.filter_name}"`
+    json_req += `, "Values" : ${JSON.stringify(req.body.filter_value.split(","))}}]`
     json_req += `}`
     
     async function fetch_api(){
@@ -222,7 +232,8 @@ router.post('/aws/ec2_restart', (req, res) => {
         .then(json => {
             console.log(json)
             sess = req.session
-            sess['json_response'] = JSON.stringify(json, null, 4)
+            sess['json_type'] = 'restart'
+            sess['json_response'] = json
         })
     }
     
@@ -251,13 +262,12 @@ router.post('/aws/ec2_describe', (req, res) => {
             },
             body: json_req,
         })
-        // .then(res => res.json())
-        // .then(json => console.log(json))
-        .then(res => res.text())
+        .then(res => res.json())
         .then(json => {
             console.log(json)
             sess = req.session
-            sess['json_response'] = JSON.stringify(json, null, 4)
+            sess['json_type'] = 'describe'
+            sess['json_response'] = json
         })
     }
     
@@ -267,8 +277,8 @@ router.post('/aws/ec2_describe', (req, res) => {
 })
 
 router.get('/aws/result', (req, res) => {
-    console.log(sess['json_response'])
     res.render(path.join(__dirname , 'public', 'html', 'result.ejs'), {
+        json_type : sess['json_type'],
         json_response: sess['json_response']
     })
 })
