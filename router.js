@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/aws/auth', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'auth.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'auth.ejs'))
 })
 
 router.post('/aws/auth', (req, res) => {
@@ -47,6 +47,8 @@ router.post('/aws/auth', (req, res) => {
     });
     
     authenticate.then(function () {
+        sess = req.session
+        sess['user_history'] = []
         res.redirect('/aws/auth_success')
     }).catch((err) => {
         console.log(err)
@@ -56,7 +58,7 @@ router.post('/aws/auth', (req, res) => {
 })
 
 router.get('/aws/auth_success', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'auth_success.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'auth_success.ejs'))
 })
 
 router.post('/aws/auth_success', (req, res) => {
@@ -70,7 +72,9 @@ router.post('/aws/auth_success', (req, res) => {
 })
 
 router.get('/aws/ec2', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'ec2.ejs'), {
+        user_history : sess['user_history']
+    })
 })
 
 router.post('/aws/ec2', (req, res) => {
@@ -93,7 +97,9 @@ router.post('/aws/ec2', (req, res) => {
 })
 
 router.get('/aws/ec2_stop', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_stop.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'ec2_stop.ejs'), {
+        user_history : sess['user_history']
+    })
 })
 
 router.post('/aws/ec2_stop', (req, res) => {
@@ -122,11 +128,13 @@ router.post('/aws/ec2_stop', (req, res) => {
         })
         .then(res => res.json())
         .then(json => {
-            // console.log(json)
             sess = req.session
             sess['json_type'] = 'stop'
             sess['json_response'] = json
-            console.log(sess['json_response'].StoppingInstances.length)
+            var today = new Date()
+            sess['user_history'].push(JSON.parse('{ "type" : "Stop Instance", "TimeCompleted" : "' + 
+            today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+            +'", "status" : "Completed"}'))
         })
     }
     
@@ -136,7 +144,9 @@ router.post('/aws/ec2_stop', (req, res) => {
 })
 
 router.get('/aws/ec2_terminate', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_terminate.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'ec2_terminate.ejs'), {
+        user_history : sess['user_history']
+    })
 })
 
 router.post('/aws/ec2_terminate', (req, res) => {
@@ -162,6 +172,10 @@ router.post('/aws/ec2_terminate', (req, res) => {
             sess = req.session
             sess['json_type'] = 'terminate'
             sess['json_response'] = json
+            var today = new Date()
+            sess['user_history'].push(JSON.parse('{ "type" : "Terminate Instance", "TimeCompleted" : "' + 
+            today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+            +'", "status" : "Completed"}'))
         })
     }
     
@@ -172,7 +186,9 @@ router.post('/aws/ec2_terminate', (req, res) => {
 
 
 router.get('/aws/ec2_start', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_start.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'ec2_start.ejs'), {
+        user_history : sess['user_history']
+    })
 })
 
 router.post('/aws/ec2_start', (req, res) => {
@@ -198,6 +214,10 @@ router.post('/aws/ec2_start', (req, res) => {
             sess = req.session
             sess['json_type'] = 'start'
             sess['json_response'] = json
+            var today = new Date()
+            sess['user_history'].push(JSON.parse('{ "type" : "Start Instance", "TimeCompleted" : "' + 
+            today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+            +'", "status" : "Completed"}'))
         })
     }
     
@@ -208,7 +228,9 @@ router.post('/aws/ec2_start', (req, res) => {
 
 
 router.get('/aws/ec2_restart', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_restart.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'ec2_restart.ejs'), {
+        user_history : sess['user_history']
+    })
 })
 
 router.post('/aws/ec2_restart', (req, res) => {
@@ -234,6 +256,10 @@ router.post('/aws/ec2_restart', (req, res) => {
             sess = req.session
             sess['json_type'] = 'restart'
             sess['json_response'] = json
+            var today = new Date()
+            sess['user_history'].push(JSON.parse('{ "type" : "Restart Instance", "TimeCompleted" : "' + 
+            today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+            +'", "status" : "Completed"}'))
         })
     }
     
@@ -243,7 +269,9 @@ router.post('/aws/ec2_restart', (req, res) => {
 })
 
 router.get('/aws/ec2_describe', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'ec2_describe.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'ec2_describe.ejs'), {
+        user_history : sess['user_history']
+    })
 })
 
 router.post('/aws/ec2_describe', (req, res) => {
@@ -268,6 +296,10 @@ router.post('/aws/ec2_describe', (req, res) => {
             sess = req.session
             sess['json_type'] = 'describe'
             sess['json_response'] = json
+            var today = new Date()
+            sess['user_history'].push(JSON.parse('{ "type" : "Describe Instance", "TimeCompleted" : "' + 
+            today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+            +'", "status" : "Completed"}'))
         })
     }
     
@@ -279,7 +311,8 @@ router.post('/aws/ec2_describe', (req, res) => {
 router.get('/aws/result', (req, res) => {
     res.render(path.join(__dirname , 'public', 'html', 'result.ejs'), {
         json_type : sess['json_type'],
-        json_response: sess['json_response']
+        json_response: sess['json_response'],
+        user_history : sess['user_history']
     })
 })
 

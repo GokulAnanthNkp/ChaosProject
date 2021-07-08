@@ -230,54 +230,83 @@
                 <div class="step-name">View result</div>
             </div>
           </div>
-      </div><!-- /.container-fluid -->
-    <div  style="padding-left:10%; padding-right:10%;">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Experiment results</h3>
+        </div><!-- /.container-fluid -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Experiment results</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <h4>Status update</h4><br>
+                            <% if(json_type === 'start'){ %>
+                                <% for(i in json_response) { %>
+                                    Instance ID : <%= json_response[i].InstanceId %><br>
+                                    Current state : <%= json_response[i].CurrentState.Name %><br>
+                                    Previous state : <%= json_response[i].PreviousState.Name %><br><br>
+                                 <% } %>
+                                Response complete : <br><%= JSON.stringify(json_response, null, 4) %><br>
+                            <% } else if(json_type === 'stop') { %>  
+                                <% for(i in json_response.StoppingInstances) { %>
+                                    Instance ID : <%= json_response.StoppingInstances[i].InstanceId %><br>
+                                    Current state : <%= json_response.StoppingInstances[i].CurrentState.Name %><br>
+                                    Previous state : <%= json_response.StoppingInstances[i].PreviousState.Name %><br><br>
+                                 <% } %>
+                                Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
+                            <% } else if(json_type === 'restart') { %>  
+                                Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
+                            <% } else if(json_type === 'terminate') { %> 
+                                <% for(i in json_response.TerminatingInstances) { %>
+                                    Instance ID : <%= json_response.TerminatingInstances[i].InstanceId %><br>
+                                    Current state : <%= json_response.TerminatingInstances[i].CurrentState.Name %><br>
+                                    Previous state : <%= json_response.TerminatingInstances[i].PreviousState.Name %><br><br>
+                                 <% } %> 
+                                Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
+                            <% } else{ %>  
+                                Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
+                            <% } %>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/aws/ec2" class="btn btn-default">Try another experiment</a>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <p>
-                    <h4>Status update</h4><br>
-                    <% if(json_type === 'start'){ %>
-                        <% for(i in json_response) { %>
-                            Instance ID : <%= json_response[i].InstanceId %><br>
-                            Current state : <%= json_response[i].CurrentState.Name %><br>
-                            Previous state : <%= json_response[i].PreviousState.Name %><br><br>
-                         <% } %>
-                        Response complete : <br><%= JSON.stringify(json_response, null, 4) %><br>
-                    <% } else if(json_type === 'stop') { %>  
-                        <% for(i in json_response.StoppingInstances) { %>
-                            Instance ID : <%= json_response.StoppingInstances[i].InstanceId %><br>
-                            Current state : <%= json_response.StoppingInstances[i].CurrentState.Name %><br>
-                            Previous state : <%= json_response.StoppingInstances[i].PreviousState.Name %><br><br>
-                         <% } %>
-                        Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
-                    <% } else if(json_type === 'restart') { %>  
-                        Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
-                    <% } else if(json_type === 'terminate') { %> 
-                        <% for(i in json_response.TerminatingInstances) { %>
-                            Instance ID : <%= json_response.TerminatingInstances[i].InstanceId %><br>
-                            Current state : <%= json_response.TerminatingInstances[i].CurrentState.Name %><br>
-                            Previous state : <%= json_response.TerminatingInstances[i].PreviousState.Name %><br><br>
-                         <% } %> 
-                        Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
-                    <% } else{ %>  
-                        Response complete : <%= JSON.stringify(json_response, null, 4) %><br>
-                    <% } %>
-                </p>
-            </div>
-            <div class="card-footer">
-                <a href="/aws/ec2" class="btn btn-default">Try another experiment</a>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent History</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="products-list product-list-in-card pr-2">
+                            <% if(user_history.length > 0) { %>
+                                <% for(i in user_history) { %>
+                                    <li class="item">
+                                        <div class="product-title">
+                                            <%= user_history[i].type %>
+                                            <span class="badge float-right">
+                                                <%= user_history[i].TimeCompleted %>
+                                            </span>
+                                        </div>
+                                        <div class="product-description">
+                                            <%= user_history[i].status %>
+                                        </div>
+                                    </li>
+                                <% } %>
+                            <% } else { %>
+                                <li class="item">
+                                    <div class="product-title">History is empty!</div>
+                                    <div class="product-description">
+                                        Completed experiments appear here
+                                    </div>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
-    <!-- <form action="">
-        <label for="exp">Choose the Experiment Type:</label>
-        <select name="exp" id="exp" style="width: 300px;">
-        </select>
-    </form> -->
-
     </section>
     <!-- /.content -->
   </div>

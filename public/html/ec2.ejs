@@ -207,7 +207,7 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <section class="content">
+    <div class="content">
       <div class="container-fluid">
         <!-- Main row -->
             <div class="stepper-wrapper">
@@ -232,37 +232,66 @@
                     <div class="step-name">View result</div>
                 </div>
               </div>
-      </div><!-- /.container-fluid -->
-    <div style="padding-left:20%; padding-right:20%;">
-        <div class="card card-primary">
-            <form action="" method="POST">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="module">Choose the required module:</label>
-                        <select name="module" class="form-control" id="module">
-                            <option disabled selected>Choose the required module</option>
-                            <option value="stop_instances">Stop instance(s)</option>
-                            <option value="terminate_instances">Terminate instance(s)</option>
-                            <option value="start_instances">Start instance(s)</option>
-                            <option value="restart_instances">Restart instance(s)</option>
-                            <option value="describe_instances">Describe instance(s)</option>
-                        </select> 
+        </div><!-- /.container-fluid -->
+      <!-- <div class="col-md-4"> <div style="padding-left:20%; padding-right:20%;"> -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card card-primary">
+                    <form action="" method="POST">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="module">Choose the required module:</label>
+                                <select name="module" class="form-control" id="module">
+                                    <option disabled selected>Choose the required module</option>
+                                    <option value="stop_instances">Stop instance(s)</option>
+                                    <option value="terminate_instances">Terminate instance(s)</option>
+                                    <option value="start_instances">Start instance(s)</option>
+                                    <option value="restart_instances">Restart instance(s)</option>
+                                    <option value="describe_instances">Describe instance(s)</option>
+                                </select> 
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/aws/auth_success" class="btn btn-default">Previous</a>
+                            <button type="submit" class="btn btn-primary float-right">Next</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent History</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="products-list product-list-in-card pr-2">
+                            <% if(user_history.length > 0) { %>
+                                <% for(i in user_history) { %>
+                                    <li class="item">
+                                        <div class="product-title">
+                                            <%= user_history[i].type %>
+                                            <span class="badge float-right">
+                                                <%= user_history[i].TimeCompleted %>
+                                            </span>
+                                        </div>
+                                        <div class="product-description">
+                                            <%= user_history[i].status %>
+                                        </div>
+                                    </li>
+                                <% } %>
+                            <% } else { %>
+                                <li class="item">
+                                    <div class="product-title">History is empty!</div>
+                                    <div class="product-description">
+                                        Completed experiments appear here
+                                    </div>
+                                </li>
+                            <% } %>
+                        </ul>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a href="/aws/auth_success" class="btn btn-default">Previous</a>
-                    <button type="submit" class="btn btn-primary float-right">Next</button>
-                </div>
-            </form>
-            
+            </div>
         </div>
-      </div>
-    <!-- <form action="">
-        <label for="exp">Choose the Experiment Type:</label>
-        <select name="exp" id="exp" style="width: 300px;">
-        </select>
-    </form> -->
-
     </section>
     <!-- /.content -->
   </div>
