@@ -9,6 +9,7 @@ const fetch = require("node-fetch");
 const { exec } = require('child_process')
 const { PythonShell } = require('python-shell')
 const session = require('express-session')
+const linereader = require('line-reader')
 
 const router = express.Router()
 
@@ -17,6 +18,12 @@ router.get('/', (req, res) => {
 })
 
 router.get('/aws/auth', (req, res) => {
+    // lineReader.eachLine('/home/harshal1711/.aws/credentials', (line) => {
+    //     console.log(line)
+    //     if (!line.includes('[default]') {
+    //         return false
+    //     }
+    // })
     res.render(path.join(__dirname , 'public', 'html', 'auth.ejs'))
 })
 
