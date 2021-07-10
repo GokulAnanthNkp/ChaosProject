@@ -235,17 +235,43 @@
         <div class="card card-primary">
             <form action="" method="POST">
                 <div class="card-body">
+                    <% if(cred.length > 0) { %>
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h5>Previous credentials found:</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <% var labels = ['AWS Access key :', 'Secret Key:', 'Region :'] %>
+                                    <table border = 0>
+                                        <% for(i in cred) { %>
+                                            <% if (cred[i] !== '[default]') { %>
+                                                <tr><td><%= labels[i - 1] %></td><td>&nbsp&nbsp&nbsp<%= cred[i].split(' ')[2] %></td></tr>
+                                            <% } %>
+                                        <% } %>
+                                    </table>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="prev_creds" name="prev_creds" value="true" checked>
+                                        <label class="form-check-label"><b>Use these credentials?</b></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4><b>Or enter new credentials below:</b></h4>
+                    <% } %>
                     <div class="form-group">
                         <label for="service">Enter AWS access key:</label>
-                        <input type='text' name="access_key" class="form-control" id="access_key" placeholder="Enter access key" required>
+                        <input type='text' name="access_key" class="form-control" id="access_key" placeholder="Enter access key">
                     </div>
                     <div class="form-group">
                         <label for="service">Enter secret access key:</label>
-                        <input type='text' name="secret_access_key" class="form-control" id="secret_access_key" placeholder="Enter secret access key" required>
+                        <input type='text' name="secret_access_key" class="form-control" id="secret_access_key" placeholder="Enter secret access key">
                     </div>
                     <div class="form-group">
                         <label for="service">Enter region:</label>
-                        <input type='text' name="region" class="form-control" id="region" placeholder="Enter region" required>
+                        <input type='text' name="region" class="form-control" id="region" placeholder="Enter region">
                     </div>
                 </div>
                 <div class="card-footer">
@@ -255,12 +281,6 @@
             
         </div>
       </div>
-    <!-- <form action="">
-        <label for="exp">Choose the Experiment Type:</label>
-        <select name="exp" id="exp" style="width: 300px;">
-        </select>
-    </form> -->
-
     </section>
     <!-- /.content -->
   </div>

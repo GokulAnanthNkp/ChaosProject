@@ -9,8 +9,6 @@ const fetch = require("node-fetch");
 const { exec } = require('child_process')
 const { PythonShell } = require('python-shell')
 const session = require('express-session')
-const linereader = require('line-reader')
-
 const router = express.Router()
 
 router.get('/', (req, res) => {
@@ -18,50 +16,49 @@ router.get('/', (req, res) => {
 })
 
 router.get('/aws/auth', (req, res) => {
-    // lineReader.eachLine('/home/harshal1711/.aws/credentials', (line) => {
-    //     console.log(line)
-    //     if (!line.includes('[default]') {
-    //         return false
-    //     }
-    // })
-    res.render(path.join(__dirname , 'public', 'html', 'auth.ejs'))
+    var data = fs.readFileSync('/home/harshal1711/.aws/credentials', {encoding:'utf8', flag:'r'}).split('\n')
+    sess = req.session
+    sess['user_cred'] = data
+    res.render(path.join(__dirname , 'public', 'html', 'auth.ejs'), {
+        cred : sess['user_cred']
+    })
 })
 
 router.post('/aws/auth', (req, res) => {
+    sess = req.session
     var authenticate = new Promise((resolve, reject) => {
-        data1 = `[default] \naws_access_key_id = ${req.body.access_key} \naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
-        data2 = `[default] \nregion = ${req.body.region}`
         done = true
-        PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
-            if (err) throw err;
-        })
-        fs.writeFile('/home/harshal1711/.aws/credentials', data1, (err)=>{
-            if(err) {
-                done = false
-            }
-        })
-        fs.writeFile('/home/harshal1711/.aws/config', data2, (err)=>{
-            if(err) {
-                done = false
-            }
-        })
-        if (done) {
-            resolve();
+        if(!req.body.prev_creds){
+            data1 = `[default]\naws_access_key_id = ${req.body.access_key}\naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
+            data2 = `[default]\nregion = ${req.body.region}`
+            PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
+                if (err) throw err;
+            })
+            fs.writeFile('/home/harshal1711/.aws/credentials', data1, (err)=>{
+                if(err) {
+                    done = false
+                }
+            })
+            fs.writeFile('/home/harshal1711/.aws/config', data2, (err)=>{
+                if(err) {
+                    done = false
+                }
+            })
         }
         else{
-            reject('Error in updating authentication file')
+            PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${sess['user_cred'][3].split(" ")[2]}`]}, (err) => {
+                if (err) throw err;
+            })
+        }
+        if (done) {
+            resolve();
         }
     });
     
     authenticate.then(function () {
-        sess = req.session
         sess['user_history'] = []
         res.redirect('/aws/auth_success')
-    }).catch((err) => {
-        console.log(err)
-        res.redirect('/aws/auth_success')
-        window.alert("Error updating authentication details")
-    });
+    })
 })
 
 router.get('/aws/auth_success', (req, res) => {
@@ -139,7 +136,7 @@ router.post('/aws/ec2_stop', (req, res) => {
             sess['json_type'] = 'stop'
             sess['json_response'] = json
             var today = new Date()
-            sess['user_history'].push(JSON.parse('{ "type" : "Stop Instance", "TimeCompleted" : "' + 
+            sess['user_history'].unshift(JSON.parse('{ "type" : "Stop Instance", "TimeCompleted" : "' + 
             today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
             +'", "status" : "Completed"}'))
         })
@@ -180,7 +177,7 @@ router.post('/aws/ec2_terminate', (req, res) => {
             sess['json_type'] = 'terminate'
             sess['json_response'] = json
             var today = new Date()
-            sess['user_history'].push(JSON.parse('{ "type" : "Terminate Instance", "TimeCompleted" : "' + 
+            sess['user_history'].unshift(JSON.parse('{ "type" : "Terminate Instance", "TimeCompleted" : "' + 
             today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
             +'", "status" : "Completed"}'))
         })
@@ -222,7 +219,7 @@ router.post('/aws/ec2_start', (req, res) => {
             sess['json_type'] = 'start'
             sess['json_response'] = json
             var today = new Date()
-            sess['user_history'].push(JSON.parse('{ "type" : "Start Instance", "TimeCompleted" : "' + 
+            sess['user_history'].unshift(JSON.parse('{ "type" : "Start Instance", "TimeCompleted" : "' + 
             today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
             +'", "status" : "Completed"}'))
         })
@@ -264,7 +261,7 @@ router.post('/aws/ec2_restart', (req, res) => {
             sess['json_type'] = 'restart'
             sess['json_response'] = json
             var today = new Date()
-            sess['user_history'].push(JSON.parse('{ "type" : "Restart Instance", "TimeCompleted" : "' + 
+            sess['user_history'].unshift(JSON.parse('{ "type" : "Restart Instance", "TimeCompleted" : "' + 
             today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
             +'", "status" : "Completed"}'))
         })
@@ -304,7 +301,7 @@ router.post('/aws/ec2_describe', (req, res) => {
             sess['json_type'] = 'describe'
             sess['json_response'] = json
             var today = new Date()
-            sess['user_history'].push(JSON.parse('{ "type" : "Describe Instance", "TimeCompleted" : "' + 
+            sess['user_history'].unshift(JSON.parse('{ "type" : "Describe Instance", "TimeCompleted" : "' + 
             today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
             +'", "status" : "Completed"}'))
         })
