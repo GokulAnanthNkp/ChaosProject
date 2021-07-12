@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AWS Experiment</title>
+  <title>Dashboard</title>
 
   <!-- Theme style for progress bar -->
   <link rel="stylesheet" href="/public/dist/css/progress.css">
@@ -33,7 +33,7 @@
 
   <!-- Preloader -->
   <!-- <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="/public/dist/img/HavocLogo.png" alt="HavocLogo" height="60" width="60">
+    <img class="animation__shake" src="/public/dist/img/WiproLogo.png" alt="WiproLogo" height="60" width="60">
   </div> -->
 
   <!-- Top Horizontal Navbar -->
@@ -80,8 +80,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/" class="brand-link">
-      <img src="/public/dist/img/HavocLogo.png" alt="Havoc Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Havoc</span>
+      <img src="/public/dist/img/WiproLogo.png" alt="Wipro Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Wipro</span>
     </a>
 
     <!-- Sidebar -->
@@ -93,18 +93,16 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <div class="nav-link">
-                <a href="/">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Dashboard
-                </p>
-                </a>
-              </div>
+            <a href="/" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
           </li>
 
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a class="nav-link">
             <i class="nav-icon fas fa-flask"></i>
               <p>
                 Create hypothesis
@@ -114,66 +112,38 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <div class="nav-link">
-                    <i class="fab fa-aws nav-icon"></i>
-                    <a href="/aws/auth">
-                    <p>AWS</p>
-                    </a>
-                  </div>
+                  <i class="fab fa-aws nav-icon"></i>
+                  <a href="/aws">
+                  <p>AWS</p>
+                  </a>
+                </div>
               </li>
-            </ul>
-          </li>
-
-
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Charts
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>ChartJS</p>
-                </a>
+                <div class="nav-link">
+                  <i class="fab fa-google nav-icon"></i>
+                  <a href="/">
+                  <p>GCP</p>
+                  </a>
+                </div>
               </li>
             </ul>
           </li>
-
-
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
+            <a class="nav-link">
+            <i class="nav-icon far fa-chart-bar"></i>
               <p>
-                Forms
+                System metrics
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>General Elements</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
-              <p>
-                Tables
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Simple Tables</p>
-                </a>
+                <div class="nav-link">
+                  <i class="fab fa-aws nav-icon"></i>
+                  <a href="/aws/metrics">
+                  <p>AWS Cloudwatch</p>
+                  </a>
+                </div>
               </li>
             </ul>
           </li>
@@ -191,75 +161,55 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">AWS Chaos</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">Home</a></li>
-              <li class="breadcrumb-item active">AWS</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          <div class="row mb-2">
+              <div class="col-sm-6">
+                  <h1 class="m-0">Home</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-
+    
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-        <!-- Main row -->
-            <div class="stepper-wrapper">
-                <div class="stepper-item completed">
-                <div class="step-counter"><i class="fas fa-check"></i></div>
-                <div class="step-name">AWS settings</div>
+    <div class="container-fluid">
+      <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-6 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                <h3><i class="fab fa-aws nav-icon"></i></h3>
+                <p>AWS Experiment</p>
                 </div>
-                <div class="stepper-item active">
-                <div class="step-counter">2</div>
-                <div class="step-name">Choose service</div>
+                <div class="icon">
+                <i class="fas fa-vial"></i>
                 </div>
-                <div class="stepper-item">
-                <div class="step-counter">3</div>
-                <div class="step-name">Choose activity</div>
-                </div>
-                <div class="stepper-item">
-                <div class="step-counter">4</div>
-                <div class="step-name">Tune parameters</div>
-                </div>
-                <div class="stepper-item">
-                    <div class="step-counter">5</div>
-                    <div class="step-name">View result</div>
-                </div>
-              </div>
-      </div><!-- /.container-fluid -->
-    <div style="padding-left:20%; padding-right:20%;">
-        <div class="card card-primary">
-            <form action="" method="POST">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="service">Choose the Target Service:</label>
-                        <select name="service" class="form-control" id="service">
-                            <option disabled selected>Choose the required service</option>
-                            <option value="ec2">AWS EC2</option>
-                            <option value="ecs">AWS ECS</option>
-                        </select> 
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="/aws/auth" class="btn btn-default">Previous</a>
-                    <button type="submit" class="btn btn-primary float-right">Next</button>
-                </div>
-            </form>
-            
-        </div>
-      </div>
-    <!-- <form action="">
-        <label for="exp">Choose the Experiment Type:</label>
-        <select name="exp" id="exp" style="width: 300px;">
-        </select>
-    </form> -->
+                <a href="/aws/auth" class="small-box-footer">Create Chaos! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
 
+            <div class="col-lg-6 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>Monitor system metrics</h3>
+                    <p>Using Grafana and Cloudwatch</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-chart-area"></i>
+                </div>
+                <a href="/aws/metrics" class="small-box-footer">Check vitals <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
     </section>
     <!-- /.content -->
   </div>

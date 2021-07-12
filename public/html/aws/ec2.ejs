@@ -33,7 +33,7 @@
 
   <!-- Preloader -->
   <!-- <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="/public/dist/img/HavocLogo.png" alt="HavocLogo" height="60" width="60">
+    <img class="animation__shake" src="/public/dist/img/WiproLogo.png" alt="WiproLogo" height="60" width="60">
   </div> -->
 
   <!-- Top Horizontal Navbar -->
@@ -80,8 +80,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/" class="brand-link">
-      <img src="/public/dist/img/HavocLogo.png" alt="Havoc Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Havoc</span>
+      <img src="/public/dist/img/WiproLogo.png" alt="Wipro Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Wipro</span>
     </a>
 
     <!-- Sidebar -->
@@ -93,18 +93,16 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <div class="nav-link">
-                <a href="/">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Dashboard
-                </p>
-                </a>
-              </div>
+            <a href="/" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
           </li>
 
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a class="nav-link">
             <i class="nav-icon fas fa-flask"></i>
               <p>
                 Create hypothesis
@@ -114,66 +112,38 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <div class="nav-link">
-                    <i class="fab fa-aws nav-icon"></i>
-                    <a href="/aws/auth">
-                    <p>AWS</p>
-                    </a>
-                  </div>
+                  <i class="fab fa-aws nav-icon"></i>
+                  <a href="/aws">
+                  <p>AWS</p>
+                  </a>
+                </div>
               </li>
-            </ul>
-          </li>
-
-
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Charts
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>ChartJS</p>
-                </a>
+                <div class="nav-link">
+                  <i class="fab fa-google nav-icon"></i>
+                  <a href="/">
+                  <p>GCP</p>
+                  </a>
+                </div>
               </li>
             </ul>
           </li>
-
-
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
+            <a class="nav-link">
+            <i class="nav-icon far fa-chart-bar"></i>
               <p>
-                Forms
+                System metrics
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>General Elements</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
-              <p>
-                Tables
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Simple Tables</p>
-                </a>
+                <div class="nav-link">
+                  <i class="fab fa-aws nav-icon"></i>
+                  <a href="/aws/metrics">
+                  <p>AWS Cloudwatch</p>
+                  </a>
+                </div>
               </li>
             </ul>
           </li>
@@ -252,7 +222,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="/aws/auth_success" class="btn btn-default">Previous</a>
+                            <a href="/aws_success" class="btn btn-default">Previous</a>
                             <button type="submit" class="btn btn-primary float-right">Next</button>
                         </div>
                     </form>

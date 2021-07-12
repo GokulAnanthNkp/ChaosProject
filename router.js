@@ -13,9 +13,17 @@ const session = require('express-session')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname , 'public', 'html', 'home.html'))
+    res.render(path.join(__dirname , 'public', 'html', 'home.ejs'))
     sess = req.session
     sess['validation'] = false          // false: validation not yet done(needed) on next form
+})
+
+router.get('/aws', (req, res) => {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'aws.ejs'))
+})
+
+router.get('/aws/metrics', (req, res) => {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'metrics.ejs'))
 })
 
 router.get('/aws/auth', (req, res) => {
@@ -26,7 +34,7 @@ router.get('/aws/auth', (req, res) => {
         sess['validate'] = [false, false, false]
     }
     console.log(sess['validate'])
-    res.render(path.join(__dirname , 'public', 'html', 'auth.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'auth.ejs'), {
         cred : sess['user_cred'],
         validate : sess['validate']
     })
@@ -50,7 +58,7 @@ router.post('/aws/auth', (req, res) => {
                         done = false
                     }
                 })
-                PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
+                PythonShell.run('../../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
                     if (err) throw err;
                 })
                 sess['validation'] = false
@@ -70,7 +78,7 @@ router.post('/aws/auth', (req, res) => {
             }
         }
         else{
-            PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${sess['user_cred'][3].split(" ")[2]}`]}, (err) => {
+            PythonShell.run('../../../../../../../../home/harshal1711/app.py', {args : [`${sess['user_cred'][3].split(" ")[2]}`]}, (err) => {
                 if (err) throw err;
             })
             sess['validation'] = false
@@ -89,7 +97,7 @@ router.post('/aws/auth', (req, res) => {
 })
 
 router.get('/aws/auth_success', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'auth_success.ejs'))
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'auth_success.ejs'))
 })
 
 router.post('/aws/auth_success', (req, res) => {
@@ -103,7 +111,7 @@ router.post('/aws/auth_success', (req, res) => {
 })
 
 router.get('/aws/ec2', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'ec2.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -128,7 +136,7 @@ router.post('/aws/ec2', (req, res) => {
 })
 
 router.get('/aws/ec2_stop', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'ec2_stop.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_stop.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -175,7 +183,7 @@ router.post('/aws/ec2_stop', (req, res) => {
 })
 
 router.get('/aws/ec2_terminate', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'ec2_terminate.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_terminate.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -217,7 +225,7 @@ router.post('/aws/ec2_terminate', (req, res) => {
 
 
 router.get('/aws/ec2_start', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'ec2_start.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_start.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -259,7 +267,7 @@ router.post('/aws/ec2_start', (req, res) => {
 
 
 router.get('/aws/ec2_restart', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'ec2_restart.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_restart.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -300,7 +308,7 @@ router.post('/aws/ec2_restart', (req, res) => {
 })
 
 router.get('/aws/ec2_describe', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'ec2_describe.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_describe.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -340,7 +348,7 @@ router.post('/aws/ec2_describe', (req, res) => {
 })
 
 router.get('/aws/result', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'result.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'result.ejs'), {
         json_type : sess['json_type'],
         json_response: sess['json_response'],
         user_history : sess['user_history']
