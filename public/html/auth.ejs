@@ -262,15 +262,24 @@
                         <h4><b>Or enter new credentials below:</b></h4>
                     <% } %>
                     <div class="form-group">
-                        <label for="service">Enter AWS access key:</label>
+                        <% if (validate[0]) {%>
+                            <div style="color: red"><i class="fas fa-asterisk"></i>Field is required</div>
+                        <% } %>
+                        <label for="access_key">Enter AWS access key:</label>
                         <input type='text' name="access_key" class="form-control" id="access_key" placeholder="Enter access key">
                     </div>
                     <div class="form-group">
-                        <label for="service">Enter secret access key:</label>
+                        <% if (validate[1]) {%>
+                            <div style="color: red"><i class="fas fa-asterisk"></i>Field is required</div>
+                        <% } %>
+                        <label for="secret_access_key">Enter secret access key:</label>
                         <input type='text' name="secret_access_key" class="form-control" id="secret_access_key" placeholder="Enter secret access key">
                     </div>
                     <div class="form-group">
-                        <label for="service">Enter region:</label>
+                        <% if (validate[2]) {%>
+                            <div style="color: red"><i class="fas fa-asterisk"></i>Field is required</div>
+                        <% } %>
+                        <label for="region">Enter region:</label>
                         <input type='text' name="region" class="form-control" id="region" placeholder="Enter region">
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 /**
- * line 29,32,37
+    to run app on PC modify path on lines specified depending on your own desktop
+ * line 21,42,47,52,72
  */
 
 const express = require('express');
@@ -13,14 +14,21 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname , 'public', 'html', 'home.html'))
+    sess = req.session
+    sess['validation'] = false          // false: validation not yet done(needed) on next form
 })
 
 router.get('/aws/auth', (req, res) => {
     var data = fs.readFileSync('/home/harshal1711/.aws/credentials', {encoding:'utf8', flag:'r'}).split('\n')
     sess = req.session
     sess['user_cred'] = data
+    if(!sess['validation']){
+        sess['validate'] = [false, false, false]
+    }
+    console.log(sess['validate'])
     res.render(path.join(__dirname , 'public', 'html', 'auth.ejs'), {
-        cred : sess['user_cred']
+        cred : sess['user_cred'],
+        validate : sess['validate']
     })
 })
 
@@ -29,26 +37,43 @@ router.post('/aws/auth', (req, res) => {
     var authenticate = new Promise((resolve, reject) => {
         done = true
         if(!req.body.prev_creds){
-            data1 = `[default]\naws_access_key_id = ${req.body.access_key}\naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
-            data2 = `[default]\nregion = ${req.body.region}`
-            PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
-                if (err) throw err;
-            })
-            fs.writeFile('/home/harshal1711/.aws/credentials', data1, (err)=>{
-                if(err) {
-                    done = false
+            if(req.body.access_key !== '' && req.body.secret_access_key !== '' && req.body.region !== ''){
+                data1 = `[default]\naws_access_key_id = ${req.body.access_key}\naws_secret_access_key = ${req.body.secret_access_key}\nregion = ${req.body.region}`
+                data2 = `[default]\nregion = ${req.body.region}`
+                fs.writeFile('/home/harshal1711/.aws/credentials', data1, (err)=>{
+                    if(err) {
+                        done = false
+                    }
+                })
+                fs.writeFile('/home/harshal1711/.aws/config', data2, (err)=>{
+                    if(err) {
+                        done = false
+                    }
+                })
+                PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${req.body.region}`]}, (err) => {
+                    if (err) throw err;
+                })
+                sess['validation'] = false
+            }
+            else{
+                if(req.body.access_key === ''){
+                    sess['validate'][0] = true    // true : user has left field empty
                 }
-            })
-            fs.writeFile('/home/harshal1711/.aws/config', data2, (err)=>{
-                if(err) {
-                    done = false
+                if(req.body.secret_access_key === ''){
+                    sess['validate'][1] = true    // true : user has left field empty
                 }
-            })
+                if(req.body.region === ''){
+                    sess['validate'][2] = true    // true : user has left field empty
+                }
+                sess['validation'] = true   // validation has been done redirection to same page
+                res.redirect('/aws/auth')
+            }
         }
         else{
             PythonShell.run('../../../../../../../home/harshal1711/app.py', {args : [`${sess['user_cred'][3].split(" ")[2]}`]}, (err) => {
                 if (err) throw err;
             })
+            sess['validation'] = false
         }
         if (done) {
             resolve();
@@ -57,7 +82,9 @@ router.post('/aws/auth', (req, res) => {
     
     authenticate.then(function () {
         sess['user_history'] = []
-        res.redirect('/aws/auth_success')
+        if(!sess['validation']){
+            res.redirect('/aws/auth_success')
+        }
     })
 })
 
