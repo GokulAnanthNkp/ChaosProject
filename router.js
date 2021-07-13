@@ -1,6 +1,8 @@
 /**
     to run app on PC modify path on lines specified depending on your own desktop
- * line 21,42,47,52,72
+    In app.py :     line 17 to be commented out as AWS_REGION environment variable may not be needed to be set
+ *  In router.js :  lines 31,53,58 need path to ~/.aws/credentials or ~/.aws/config
+                    lines 63,89 calls app.py on specific path and passes argument to set environment variable
  */
 
 const express = require('express');
@@ -66,12 +68,18 @@ router.post('/aws/auth', (req, res) => {
             else{
                 if(req.body.access_key === ''){
                     sess['validate'][0] = true    // true : user has left field empty
+                }else{
+                    sess['validate'][0] = false
                 }
                 if(req.body.secret_access_key === ''){
                     sess['validate'][1] = true    // true : user has left field empty
+                }else{
+                    sess['validate'][1] = false
                 }
                 if(req.body.region === ''){
                     sess['validate'][2] = true    // true : user has left field empty
+                }else{
+                    sess['validate'][2] = false
                 }
                 sess['validation'] = true   // validation has been done redirection to same page
                 res.redirect('/aws/auth')

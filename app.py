@@ -15,12 +15,6 @@ def hello():
 @app.route('/', methods=['POST'])
 def home1():
     os.environ["AWS_REGION"] = str(sys.argv[1])
-    # content = request.json
-    # data = json.loads(request.data)
-    # print(request.get_json)
-    # print(request.data)
-    # if request.is_json:
-    #     print(request.get_json())
     result = ""
     try:
         record = json.loads(request.data)
