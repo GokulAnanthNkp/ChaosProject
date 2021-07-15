@@ -183,23 +183,23 @@
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                   <div class="step-counter"><i class="fas fa-check"></i></div>
-                  <div class="step-name">AWS settings</div>
+                  <div class="step-name">Credentials</div>
                 </div>
                 <div class="stepper-item completed">
                   <div class="step-counter"><i class="fas fa-check"></i></div>
-                  <div class="step-name">Choose service</div>
+                  <div class="step-name">Service</div>
                 </div>
                 <div class="stepper-item completed">
                   <div class="step-counter"><i class="fas fa-check"></i></div>
-                  <div class="step-name">Choose activity</div>
+                  <div class="step-name">Activity</div>
                 </div>
                 <div class="stepper-item active">
                   <div class="step-counter">4</div>
-                  <div class="step-name">Tune parameters</div>
+                  <div class="step-name">Parameters</div>
                 </div>
                 <div class="stepper-item">
                     <div class="step-counter">5</div>
-                    <div class="step-name">View result</div>
+                    <div class="step-name">Result</div>
                 </div>
               </div>
       </div><!-- /.container-fluid -->
@@ -209,8 +209,18 @@
                     <form action="" method="POST">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="instance_ids">Enter instances to be terminated(separated by a comma):</label>
-                                <input type='text' name="instance_ids" class="form-control" id="instance_ids" placeholder="Enter instance ids" required>
+                                <label for="instance_ids">Choose instances to be stopped:</label><br>
+                                <div class="form-check">
+                                    <% if(json_resp.Reservations.length > 0) { %>
+                                        <% for(i in json_resp.Reservations) { %>
+                                            <% var select_instance_id = json_resp.Reservations[i].Instances[0].InstanceId %>
+                                            <% var dyn_option = '<input class="form-check-input" type="checkbox" name="' + select_instance_id + '" value="true">' + select_instance_id + '</option><br>' %>
+                                            <%- dyn_option %>
+                                        <% } %>
+                                    <% } else { %>
+                                        <h5>No instance available!</h5>
+                                    <% } %>
+                            </div>
                             </div>
                             <div class="form-group">
                                 <label for="az">Availability zone:</label>
@@ -325,7 +335,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Recent History</h3>
+                        <h3 class="card-title">Action History</h3>
                     </div>
                     <div class="card-body">
                         <ul class="products-list product-list-in-card pr-2">

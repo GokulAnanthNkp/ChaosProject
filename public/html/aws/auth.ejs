@@ -183,23 +183,23 @@
             <div class="stepper-wrapper">
                 <div class="stepper-item active">
                   <div class="step-counter">1</div>
-                  <div class="step-name">AWS settings</div>
+                  <div class="step-name">Credentials</div>
                 </div>
                 <div class="stepper-item">
                   <div class="step-counter">2</div>
-                  <div class="step-name">Choose service</div>
+                  <div class="step-name">Service</div>
                 </div>
                 <div class="stepper-item">
                   <div class="step-counter">3</div>
-                  <div class="step-name">Choose activity</div>
+                  <div class="step-name">Activity</div>
                 </div>
                 <div class="stepper-item">
                   <div class="step-counter">4</div>
-                  <div class="step-name">Tune parameters</div>
+                  <div class="step-name">Parameters</div>
                 </div>
                 <div class="stepper-item">
                     <div class="step-counter">5</div>
-                    <div class="step-name">View result</div>
+                    <div class="step-name">Result</div>
                 </div>
               </div>
       </div><!-- /.container-fluid -->
@@ -218,7 +218,11 @@
                                     <table border = 0>
                                         <% for(i in cred) { %>
                                             <% if (cred[i] !== '[default]') { %>
-                                                <tr><td><%= labels[i - 1] %></td><td>&nbsp&nbsp&nbsp<%= cred[i].split(' ')[2] %></td></tr>
+                                                <% var key = cred[i].split(' ')[2] %>
+                                                <% if(key.length > 15){ %>    
+                                                    <% key = key.substring(0, key.length - 5).replace(/[a-z\d+-_*&%$#@!^]/gi,"*") + key.substring(key.length - 5, key.length) %>
+                                                <% } %>
+                                                <tr><td><%= labels[i - 1] %></td><td>&nbsp&nbsp&nbsp<%= key %></td></tr>
                                             <% } %>
                                         <% } %>
                                     </table>
