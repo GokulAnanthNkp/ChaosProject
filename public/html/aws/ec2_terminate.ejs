@@ -212,11 +212,14 @@
                                 <label for="instance_ids">Choose instances to be stopped:</label><br>
                                 <div class="form-check">
                                     <% if(json_resp.Reservations.length > 0) { %>
-                                        <% for(i in json_resp.Reservations) { %>
-                                            <% var select_instance_id = json_resp.Reservations[i].Instances[0].InstanceId %>
-                                            <% var dyn_option = '<input class="form-check-input" type="checkbox" name="' + select_instance_id + '" value="true">' + select_instance_id + '</option><br>' %>
-                                            <%- dyn_option %>
-                                        <% } %>
+                                        <table border=0>
+                                            <% for(i in json_resp.Reservations) { %>
+                                                <% var select_instance_id = json_resp.Reservations[i].Instances[0].InstanceId %>
+                                                <% var select_az = json_resp.Reservations[i].Instances[0].Placement.AvailabilityZone %>
+                                                <% var dyn_option = '<input class="form-check-input" type="checkbox" name="' + select_instance_id + '" value="true">' + select_instance_id + '</option><br>' %>
+                                                <tr><td style="padding-left:15px"><%- dyn_option %></td><td style="padding-left:15px"><%= select_az %></td></tr>
+                                            <% } %>
+                                        </table>
                                     <% } else { %>
                                         <h5>No instance available!</h5>
                                     <% } %>

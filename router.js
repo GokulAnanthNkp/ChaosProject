@@ -23,6 +23,8 @@ AWS.config.update({region: 'us-east-2'})
 var ec2 = new AWS.EC2({apiVersion: '2016-11-15'})
 
 router.get('/', (req, res) => {
+    console.log('Received request')
+    console.log('Received requesdq')
     res.render(path.join(__dirname , 'public', 'html', 'home.ejs'))
     sess = req.session
     sess['validation'] = false          // false: validation not yet done(needed) on next form

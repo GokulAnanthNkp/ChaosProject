@@ -215,15 +215,16 @@
                             <% if(json_type === 'start'){ %>
                                 <% if(error_encountered){ %>
                                     <h3 style="color: red">Error encountered</h3>
-                                    Response complete :<br> <%= json_response %><br>
                                 <% } else { %>
+                                    <% var resp_complete = "" %>
                                     <% for(i in json_response) { %>
                                         Instance ID : <%= json_response[i].InstanceId %><br>
                                         Current state : <%= json_response[i].CurrentState.Name %><br>
                                         Previous state : <%= json_response[i].PreviousState.Name %><br><br>
+                                        <% resp_complete += JSON.stringify(json_response[i], null, 4) + ',' %>
                                     <% } %>
                                 <% } %>
-                                Response complete :<br> <%= JSON.stringify(json_response, null, 4) %><br>
+                                Response complete :<br> <pre><%= resp_complete %></pre><br>
                             <% } else if(json_type === 'stop') { %>  
                                 <% for(i in json_response.StoppingInstances) { %>
                                     <% if(error_encountered){ %>
