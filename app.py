@@ -2,11 +2,12 @@ from flask import Flask, request, json
 import random
 import json
 import chaosaws.ec2.actions
+import chaosaws.ssm.actions
 import chaosaws.ec2.probes
 import sys, os
- 
+
 app = Flask(__name__)
- 
+
 @app.route('/', methods=['GET'])
 def hello():
     stri = "<h1>he" + str(random.random()) + "</h1>"
@@ -31,13 +32,17 @@ def home1():
             elif record["exp"]== "describe_instances":
                 result = (chaosaws.ec2.probes.describe_instances(record["filters"]))
             print (result)
+        if record["service"] == "ssm":
+            if record["exp"]== "send_command":
+                result = chaosaws.ssm.actions.send_command(record["document_name"],record["targets"],record["document_version"],record["parameters"],record["timeout_seconds"],record["max_concurrency"],record["max_error"])
+            print (result)
     except Exception as e:
         print (e.args)
         result = str(e.args)
     return result
- 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
- 
+
 app.run()

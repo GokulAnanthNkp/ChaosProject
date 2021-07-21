@@ -1,8 +1,10 @@
 /**
     to run app on PC modify path on lines specified depending on your own desktop
     In app.py :     line 17 to be commented out as AWS_REGION environment variable may not be needed to be set
- *  In router.js :  lines 18, 19 need path to ~/.aws/credentials or ~/.aws/config
-                    line 20 calls app.py on specific path and passes argument to set environment variable
+ *  In router.js :  lines 20, 21 need path to ~/.aws/credentials or ~/.aws/config
+                    line 22 calls app.py on specific path and passes argument to set environment variable
+
+    Also import the grafana JSON into local grafana to be able to see the graphs properly
  */
 
 const express = require('express');
@@ -15,19 +17,22 @@ const session = require('express-session')
 const router = express.Router()
 const AWS = require('aws-sdk')
 
-const cred_file = '/home/harshal1711/.aws/credentials'
-const config_file = '/home/harshal1711/.aws/config'
-const python_file = '../../../../../../../../home/harshal1711/app.py'
+const cred_file = path.join('C:', 'Users', 'HARSHAL SABLE', '.aws', 'credentials')
+const config_file = path.join('C:', 'Users', 'HARSHAL SABLE', '.aws', 'config')
+const python_file = path.join(__dirname, 'app.py')
 
 AWS.config.update({region: 'us-east-2'})
 var ec2 = new AWS.EC2({apiVersion: '2016-11-15'})
+var ssm = new AWS.SSM({apiVersion: '2014-11-06'})
 
 router.get('/', (req, res) => {
-    console.log('Received request')
-    console.log('Received requesdq')
     res.render(path.join(__dirname , 'public', 'html', 'home.ejs'))
     sess = req.session
     sess['validation'] = false          // false: validation not yet done(needed) on next form
+})
+
+router.get('/documentation', (req, res) => {
+    res.render(path.join(__dirname , 'public', 'html', 'documentation.ejs'))
 })
 
 router.get('/aws', (req, res) => {
@@ -59,7 +64,7 @@ router.get('/aws/metrics', (req, res) => {
         })
     })
     .catch(err => {
-        console.log(err)
+        console.log('Please restart the app')
     })
 })
 
@@ -144,6 +149,7 @@ router.post('/aws/auth', (req, res) => {
     
     authenticate.then(function () {
         sess['user_history'] = []
+        sess['ssm_user_history'] = []
         if(!sess['validation']){
             res.redirect('/aws/auth_success')
         }
@@ -159,14 +165,14 @@ router.post('/aws/auth_success', (req, res) => {
     if(req.body.service === 'ec2'){
         res.redirect('/aws/ec2')
     }
-    if(req.body.service === 'ecs'){
-        res.redirect('/aws/ecs')
+    if(req.body.service === 'ssm'){
+        res.redirect('/aws/ssm')
     }
 })
 
 router.get('/aws/ec2', (req, res) => {
     sess = req.session
-    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -199,7 +205,6 @@ router.get('/aws/ec2_stop', (req, res) => {
     }
     sess = req.session
     sess['json_resp'] = {}
-    console.log('ec2_stop')
     var fetch_instances = ec2.describeInstances(params, (err, data) => {
         if (err) {}
     }).promise()
@@ -207,13 +212,13 @@ router.get('/aws/ec2_stop', (req, res) => {
         sess['json_resp'] = res
     })
     .then(() => {
-        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_stop.ejs'), {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2_stop.ejs'), {
             json_resp : sess['json_resp'],
             user_history : sess['user_history']
         })
     })
     .catch(err => {
-        console.log(err)
+        console.log('Please restart the app')
     })
 })
 
@@ -303,13 +308,13 @@ router.get('/aws/ec2_terminate', (req, res) => {
         sess['json_resp'] = res
     })
     .then(() => {
-        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_terminate.ejs'), {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2_terminate.ejs'), {
             json_resp : sess['json_resp'],
             user_history : sess['user_history']
         })
     })
     .catch(err => {
-        console.log(err)
+        console.log('Please restart the app')
     })
 })
 
@@ -394,13 +399,13 @@ router.get('/aws/ec2_start', (req, res) => {
         sess['json_resp'] = res
     })
     .then(() => {
-        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_start.ejs'), {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2_start.ejs'), {
             json_resp : sess['json_resp'],
             user_history : sess['user_history']
         })
     })
     .catch(err => {
-        console.log(err)
+        console.log('Please restart the app')
     })
 })
 
@@ -479,7 +484,6 @@ router.get('/aws/ec2_restart', (req, res) => {
     }
     sess = req.session
     sess['json_resp'] = {}
-    console.log('ec2_stop')
     var fetch_instances = ec2.describeInstances(params, (err, data) => {
         if (err) {}
     }).promise()
@@ -487,13 +491,13 @@ router.get('/aws/ec2_restart', (req, res) => {
         sess['json_resp'] = res
     })
     .then(() => {
-        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_restart.ejs'), {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2_restart.ejs'), {
             json_resp : sess['json_resp'],
             user_history : sess['user_history']
         })
     })
     .catch(err => {
-        console.log(err)
+        console.log('Please restart the app')
     })
 })
 
@@ -550,7 +554,7 @@ router.post('/aws/ec2_restart', (req, res) => {
 })
 
 router.get('/aws/ec2_describe', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2_describe.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2_describe.ejs'), {
         user_history : sess['user_history']
     })
 })
@@ -601,12 +605,226 @@ router.post('/aws/ec2_describe', (req, res) => {
 })
 
 router.get('/aws/result', (req, res) => {
-    res.render(path.join(__dirname , 'public', 'html', 'aws', 'result.ejs'), {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'result.ejs'), {
         json_type : sess['json_type'],
         json_response: sess['json_response'],
         user_history : sess['user_history'],
         error_encountered : sess['error_encountered']
     })
 })
+
+router.get('/aws/ssm', (req, res) => {
+    sess = req.session
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ssm', 'ssm.ejs'), {
+        ssm_user_history : sess['ssm_user_history']
+    })
+})
+
+router.post('/aws/ssm', (req, res) => {
+    console.log(req.body.filter_name)
+    if(req.body.filter_name === 'AWSFIS-Run-CPU-Stress'){
+        res.redirect('/aws/ssm_cpu_stress')
+    }
+    if(req.body.filter_name === 'AWSFIS-Run-Memory-Stress'){
+        res.redirect('/aws/ssm_mem_stress')
+    }
+})
+
+router.get('/aws/ssm_cpu_stress', (req, res) => {
+    var params = {
+        Filters: [{
+            Name: 'iam-instance-profile.arn',
+            Values: ['arn:aws:iam::545530879553:instance-profile/EnablesEC2ToAccessSystemsManagerRole']
+        }]
+    }
+    sess = req.session
+    sess['json_resp'] = {}
+    var fetch_instances = ec2.describeInstances(params, (err, data) => {
+        if (err) {}
+    }).promise()
+    fetch_instances.then(res => {
+        sess['json_resp'] = res
+    })
+    .then(() => {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ssm', 'ssm_cpu_stress.ejs'), {
+            json_resp : sess['json_resp'],
+            ssm_user_history : sess['ssm_user_history']
+        })
+    })
+    .catch(err => {
+        console.log('Please restart the app')
+    })
+})
+
+router.post('/aws/ssm_cpu_stress', (req, res) => {
+    sess = req.session
+    json_req = `{"service": "ssm", "exp": "send_command"`
+    json_req += `,"document_name": "Copy-AWSFIS-Run-CPU-Stress"`
+    json_req += `, "targets": [{"Key" : "Instanceids",`
+    json_req += `"Values" : `
+
+    var selected = ""
+    var selected_ids = []
+    for(i in sess['json_resp'].Reservations){
+        selected = sess['json_resp'].Reservations[i].Instances[0].InstanceId
+        if(req.body[selected])
+        {
+            selected_ids.push(selected)
+        }
+    }
+    json_req += `${JSON.stringify(selected_ids)}}]`
+
+    json_req += `,"document_version": "${req.body.document_version}"`
+    json_req += `,"parameters": {"CPU" : ["${req.body.cpu}"]`
+    json_req += `,"InstallDependencies": ["${(req.body.dependencies === 'true' ? "True" : "False")}"]`
+    json_req += `,"DurationSeconds": ["${req.body.duration}"]}`
+    json_req += `,"timeout_seconds" : ${(req.body.timeout === '' ? 60 : req.body.timeout)}`
+    json_req += `,"max_concurrency" : "${(req.body.max_concurrency === '' ? "50" : req.body.max_concurrency)}"`
+    json_req += `,"max_error" : "${(req.body.max_error === '' ? "0" : req.body.max_error)}"`
+    json_req += `}`
+
+    console.log(json_req)
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                sess['json_type'] = 'ssm_cpu'
+                sess['json_response'] = data
+                sess['error_encountered'] = false
+                console.log(sess['json_response'])
+                var today = new Date()
+                sess['ssm_user_history'].unshift(JSON.parse('{ "type" : "CPU Stress", "TimeCompleted" : "' + 
+                today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+                +'", "status" : "Completed"}'))
+            } catch(err) {
+                sess['error_encountered'] = true
+                sess['json_type'] = 'ssm_cpu'
+                sess['json_response'] = text
+                console.log(sess['json_response'])
+                var today = new Date()
+                sess['ssm_user_history'].unshift(JSON.parse('{ "type" : "CPU Stress", "TimeCompleted" : "' + 
+                today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+                +'", "status" : "Failed"}'))
+            }
+        })
+    }
+    
+    fetch_api().then(response => {
+        res.redirect('/aws/ssm_result')
+    })
+})
+
+router.get('/aws/ssm_mem_stress', (req, res) => {
+    var params = {
+        Filters: [{
+            Name: 'iam-instance-profile.arn',
+            Values: ['arn:aws:iam::545530879553:instance-profile/EnablesEC2ToAccessSystemsManagerRole']
+        }]
+    }
+    sess = req.session
+    sess['json_resp'] = {}
+    var fetch_instances = ec2.describeInstances(params, (err, data) => {
+        if (err) {}
+    }).promise()
+    fetch_instances.then(res => {
+        sess['json_resp'] = res
+    })
+    .then(() => {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'ssm', 'ssm_mem_stress.ejs'), {
+            json_resp : sess['json_resp'],
+            ssm_user_history : sess['ssm_user_history']
+        })
+    })
+    .catch(err => {
+        console.log('Please restart the app')
+    })
+})
+
+router.post('/aws/ssm_mem_stress', (req, res) => {
+    sess = req.session
+    json_req = `{"service": "ssm", "exp": "send_command"`
+    json_req += `,"document_name": "Copy-AWSFIS-Run-Memory-Stress"`
+    json_req += `, "targets": [{"Key" : "Instanceids",`
+    json_req += `"Values" : `
+
+    var selected = ""
+    var selected_ids = []
+    for(i in sess['json_resp'].Reservations){
+        selected = sess['json_resp'].Reservations[i].Instances[0].InstanceId
+        if(req.body[selected])
+        {
+            selected_ids.push(selected)
+        }
+    }
+    json_req += `${JSON.stringify(selected_ids)}}]`
+
+    json_req += `,"document_version": "${req.body.document_version}"`
+    json_req += `,"parameters": {"Workers" : ["${req.body.workers}"]`
+    json_req += `,"InstallDependencies": ["${(req.body.dependencies === 'true' ? "True" : "False")}"]`
+    json_req += `,"DurationSeconds": ["${req.body.duration}"]`
+    json_req += `,"Percent": ["${req.body.percent}"]}`
+    json_req += `,"timeout_seconds" : ${(req.body.timeout === '' ? 60 : req.body.timeout)}`
+    json_req += `,"max_concurrency" : "${(req.body.max_concurrency === '' ? "50" : req.body.max_concurrency)}"`
+    json_req += `,"max_error" : "${(req.body.max_error === '' ? "0" : req.body.max_error)}"`
+    json_req += `}`
+
+    console.log(json_req)
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                sess['json_type'] = 'ssm_mem'
+                sess['json_response'] = data
+                sess['error_encountered'] = false
+                console.log(sess['json_response'])
+                var today = new Date()
+                sess['ssm_user_history'].unshift(JSON.parse('{ "type" : "Memory Stress", "TimeCompleted" : "' + 
+                today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+                +'", "status" : "Completed"}'))
+            } catch(err) {
+                sess['error_encountered'] = true
+                sess['json_type'] = 'ssm_mem'
+                sess['json_response'] = text
+                console.log(sess['json_response'])
+                var today = new Date()
+                sess['ssm_user_history'].unshift(JSON.parse('{ "type" : "Memory Stress", "TimeCompleted" : "' + 
+                today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+                +'", "status" : "Failed"}'))
+            }
+        })
+    }
+    
+    fetch_api().then(response => {
+        res.redirect('/aws/ssm_result')
+    })
+})
+
+router.get('/aws/ssm_result', (req, res) => {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'ssm', 'result.ejs'), {
+        json_type : sess['json_type'],
+        json_response: sess['json_response'],
+        ssm_user_history : sess['ssm_user_history'],
+        error_encountered : sess['error_encountered']
+    })
+})
+
 
 module.exports = router

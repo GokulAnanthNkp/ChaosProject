@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AWS Experiment</title>
+  <title>Dashboard</title>
 
   <!-- Theme style for progress bar -->
   <link rel="stylesheet" href="/public/dist/css/progress.css">
@@ -161,113 +161,18 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">AWS Chaos</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/">Home</a></li>
-              <li class="breadcrumb-item active">AWS</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          <div class="row mb-2">
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-
+    
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-        <!-- Main row -->
-            <div class="stepper-wrapper">
-                <div class="stepper-item active">
-                  <div class="step-counter">1</div>
-                  <div class="step-name">Credentials</div>
-                </div>
-                <div class="stepper-item">
-                  <div class="step-counter">2</div>
-                  <div class="step-name">Service</div>
-                </div>
-                <div class="stepper-item">
-                  <div class="step-counter">3</div>
-                  <div class="step-name">Activity</div>
-                </div>
-                <div class="stepper-item">
-                  <div class="step-counter">4</div>
-                  <div class="step-name">Parameters</div>
-                </div>
-                <div class="stepper-item">
-                    <div class="step-counter">5</div>
-                    <div class="step-name">Result</div>
-                </div>
-              </div>
-      </div><!-- /.container-fluid -->
-    <div  style="padding-left:20%; padding-right:20%;">
-        <div class="card card-primary">
-            <form action="" method="POST">
-                <div class="card-body">
-                    <% if(cred.length > 0) { %>
-                        <div class="card card-default">
-                            <div class="card-header">
-                                <h5>Previous credentials found:</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <% var labels = ['AWS Access key :', 'Secret Key:', 'Region :'] %>
-                                    <table border = 0>
-                                        <% for(i in cred) { %>
-                                            <% if (cred[i] !== '[default]') { %>
-                                                <% var key = cred[i].split(' ')[2] %>
-                                                <% if(key !== undefined){ %>
-                                                    <% if(key.length > 15){ %>    
-                                                        <% key = key.substring(0, key.length - 5).replace(/[a-z\d+-_*&%$#@!^]/gi,"*") + key.substring(key.length - 5, key.length) %>
-                                                    <% } %>
-                                                <% } %>
-                                                <tr><td><%= labels[i - 1] %></td><td>&nbsp&nbsp&nbsp<%= key %></td></tr>
-                                            <% } %>
-                                        <% } %>
-                                    </table>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="prev_creds" name="prev_creds" value="true" checked>
-                                        <label class="form-check-label"><b>Use these credentials?</b></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h4><b>Or enter new credentials below:</b></h4>
-                    <% } %>
-                    <div class="form-group">
-                        <% if (validate[0]) {%>
-                            <div style="color: red"><i class="fas fa-asterisk"></i>Field is required</div>
-                        <% } %>
-                        <label for="access_key">Enter AWS access key:</label>
-                        <input type='text' name="access_key" class="form-control" id="access_key" placeholder="Enter access key">
-                    </div>
-                    <div class="form-group">
-                        <% if (validate[1]) {%>
-                            <div style="color: red"><i class="fas fa-asterisk"></i>Field is required</div>
-                        <% } %>
-                        <label for="secret_access_key">Enter secret access key:</label>
-                        <input type='text' name="secret_access_key" class="form-control" id="secret_access_key" placeholder="Enter secret access key">
-                    </div>
-                    <div class="form-group">
-                        <% if (validate[2]) {%>
-                            <div style="color: red"><i class="fas fa-asterisk"></i>Field is required</div>
-                        <% } %>
-                        <label for="region">Enter region:</label>
-                        <input type='text' name="region" class="form-control" id="region" placeholder="Enter region">
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary float-right">Next</button>
-                </div>
-            </form>
-            
-        </div>
-      </div>
+    <div class="container-fluid">
+        <iframe src="/public/dist/documentation.pdf" width="100%" height="500px">
+        </iframe>
+    </div>
     </section>
     <!-- /.content -->
   </div>
