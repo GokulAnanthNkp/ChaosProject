@@ -3,7 +3,7 @@
     In app.py :     line 17 to be commented out as AWS_REGION environment variable may not be needed to be set
  *  In router.js :  lines 20, 21 need path to ~/.aws/credentials or ~/.aws/config
                     line 22 calls app.py on specific path and passes argument to set environment variable
-
+                    line 647 iam role
     Also import the grafana JSON into local grafana to be able to see the graphs properly
  */
 
@@ -17,11 +17,11 @@ const session = require('express-session')
 const router = express.Router()
 const AWS = require('aws-sdk')
 
-const cred_file = path.join('C:', 'Users', 'HARSHAL SABLE', '.aws', 'credentials')
-const config_file = path.join('C:', 'Users', 'HARSHAL SABLE', '.aws', 'config')
+const cred_file = path.join('C:', 'Users', 'GO393341', '.aws', 'credentials')
+const config_file = path.join('C:', 'Users', 'GO393341', '.aws', 'config')
 const python_file = path.join(__dirname, 'app.py')
 
-AWS.config.update({region: 'us-east-2'})
+AWS.config.update({region: 'ap-south-1'})
 var ec2 = new AWS.EC2({apiVersion: '2016-11-15'})
 var ssm = new AWS.SSM({apiVersion: '2014-11-06'})
 
@@ -168,6 +168,49 @@ router.post('/aws/auth_success', (req, res) => {
     if(req.body.service === 'ssm'){
         res.redirect('/aws/ssm')
     }
+    if(req.body.service === 'litmus'){
+        res.redirect('/aws/litmus')
+    }
+})
+
+router.get('/aws/litmus', (req, res) => {
+    sess = req.session
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'litmus', 'litmus.ejs'), {
+        user_history : sess['user_history']
+    })
+})
+
+router.post('/aws/litmus', (req, res) => {
+    console.log(req.body.module)
+    if(req.body.module === 'ec2_terminate_by_id'){
+        res.redirect('/aws/litmus_ec2_terminate')
+    }
+})
+
+router.get('/aws/litmus_ec2_terminate', (req, res) => {
+    var params = {
+        Filters: [{
+            Name: 'instance-state-name',
+            Values: ['running', 'pending']
+        }]
+    }
+    sess = req.session
+    sess['json_resp'] = {}
+    var fetch_instances = ec2.describeInstances(params, (err, data) => {
+        if (err) {}
+    }).promise()
+    fetch_instances.then(res => {
+        sess['json_resp'] = res
+    })
+    .then(() => {
+        res.render(path.join(__dirname , 'public', 'html', 'aws', 'litmus', 'litmus_ec2_terminate.ejs'), {
+            json_resp : sess['json_resp'],
+            user_history : sess['user_history']
+        })
+    })
+    .catch(err => {
+        console.log('Please restart the app')
+    })
 })
 
 router.get('/aws/ec2', (req, res) => {

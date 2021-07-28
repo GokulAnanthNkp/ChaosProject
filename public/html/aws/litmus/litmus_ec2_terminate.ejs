@@ -182,55 +182,99 @@
         <!-- Main row -->
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
-                <div class="step-counter"><i class="fas fa-check"></i></div>
-                <div class="step-name">Credentials</div>
+                  <div class="step-counter"><i class="fas fa-check"></i></div>
+                  <div class="step-name">Credentials</div>
+                </div>
+                <div class="stepper-item completed">
+                  <div class="step-counter"><i class="fas fa-check"></i></div>
+                  <div class="step-name">Service</div>
+                </div>
+                <div class="stepper-item completed">
+                  <div class="step-counter"><i class="fas fa-check"></i></div>
+                  <div class="step-name">Activity</div>
                 </div>
                 <div class="stepper-item active">
-                <div class="step-counter">2</div>
-                <div class="step-name">Service</div>
-                </div>
-                <div class="stepper-item">
-                <div class="step-counter">3</div>
-                <div class="step-name">Activity</div>
-                </div>
-                <div class="stepper-item">
-                <div class="step-counter">4</div>
-                <div class="step-name">Parameters</div>
+                  <div class="step-counter">4</div>
+                  <div class="step-name">Parameters</div>
                 </div>
                 <div class="stepper-item">
                     <div class="step-counter">5</div>
                     <div class="step-name">Result</div>
                 </div>
               </div>
-      </div><!-- /.container-fluid -->
-    <div style="padding-left:20%; padding-right:20%;">
-        <div class="card card-primary">
-            <form action="" method="POST">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="service">Choose the Target Service:</label>
-                        <select name="service" class="form-control" id="service">
-                            <option disabled selected>Choose the required service</option>
-                            <option value="ec2">EC2</option>
-                            <option value="ssm">SSM Document</option>
-                            <option value="litmus">Litmus Chaos</option>
-                        </select> 
+    </div><!-- /.container-fluid -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card card-primary">
+                <form action="" method="POST">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="instance_ids">Choose instances to be stopped:</label><br>
+                            <div class="form-check">
+                                <% if(json_resp.Reservations.length > 0) { %>
+                                    <table border=0>
+                                        <% for(i in json_resp.Reservations) { %>
+                                            <% var select_instance_id = json_resp.Reservations[i].Instances[0].InstanceId %>
+                                            <% var select_az = json_resp.Reservations[i].Instances[0].Placement.AvailabilityZone %>
+                                            <% var dyn_option = '<input class="form-check-input" type="checkbox" name="' + select_instance_id + '" value="true">' + select_instance_id + '</option><br>' %>
+                                            <tr><td style="padding-left:15px"><%- dyn_option %></td><td style="padding-left:15px"><%= select_az %></td></tr>
+                                        <% } %>
+                                    </table>
+                                <% } else { %>
+                                    <h5>No instance running!</h5>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="region">Region:</label>
+                            <input type='text' name="region" class="form-control" id="region" placeholder="Enter region">
+                        </div>
+                        <div class="form-group">
+                            <label for="total_chaos_duration">Enter total chaos duration:</label>
+                            <input type='text' name="total_chaos_duration" class="form-control" id="total_chaos_duration" placeholder="Enter total chaos duration">
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <a href="/aws" class="btn btn-default">Previous</a>
-                    <button type="submit" class="btn btn-primary float-right">Next</button>
-                </div>
-            </form>
-            
+                    <div class="card-footer">
+                        <a href="/aws/ec2" class="btn btn-default">Previous</a>
+                        <button type="submit" class="btn btn-primary float-right">Next</>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
-    <!-- <form action="">
-        <label for="exp">Choose the Experiment Type:</label>
-        <select name="exp" id="exp" style="width: 300px;">
-        </select>
-    </form> -->
-
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Action History</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="products-list product-list-in-card pr-2">
+                        <% if(user_history.length > 0) { %>
+                            <% for(i in user_history) { %>
+                                <li class="item">
+                                    <div class="product-title">
+                                        <%= user_history[i].type %>
+                                        <span class="badge float-right">
+                                            <%= user_history[i].TimeCompleted %>
+                                        </span>
+                                    </div>
+                                    <div class="product-description">
+                                        <%= user_history[i].status %>
+                                    </div>
+                                </li>
+                            <% } %>
+                        <% } else { %>
+                            <li class="item">
+                                <div class="product-title">History is empty!</div>
+                                <div class="product-description">
+                                    Completed experiments appear here
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     </section>
     <!-- /.content -->
   </div>
