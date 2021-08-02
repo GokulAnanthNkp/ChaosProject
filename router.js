@@ -17,9 +17,9 @@ const session = require('express-session')
 const router = express.Router()
 const AWS = require('aws-sdk')
 
-const cred_file = path.join('C:', 'Users', 'GO393341', '.aws', 'credentials')
-const config_file = path.join('C:', 'Users', 'GO393341', '.aws', 'config')
-const python_file = path.join(__dirname, 'app.py')
+const cred_file = path.join( '/root','.aws', 'credentials')
+const config_file = path.join( '/root','.aws', 'config')
+const python_file = path.join('/root','chaos','ChaosProject', 'app.py')
 
 AWS.config.update({region: 'ap-south-1'})
 var ec2 = new AWS.EC2({apiVersion: '2016-11-15'})
