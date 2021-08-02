@@ -213,6 +213,69 @@ router.get('/aws/litmus_ec2_terminate', (req, res) => {
     })
 })
 
+router.post('/aws/litmus_ec2_terminate', (req, res) => {
+    sess = req.session
+    json_req = `{"service": "litmus", "exp": "ec2_terminate"`
+    json_req += `,"id": `
+
+    var selected = ""
+    var selected_ids = []
+    for(i in sess['json_resp'].Reservations){
+        selected = sess['json_resp'].Reservations[i].Instances[0].InstanceId
+        if(req.body[selected])
+        {
+            selected_ids.push(selected)
+        }
+    }
+    json_req += `${JSON.stringify(selected_ids)}`
+    json_req += `}`
+    console.log(json_req)
+    
+    async function fetch_api(){
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json_req,
+        })
+        .then(res => res.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                sess['json_type'] = 'Litmus Terminate'
+                sess['json_response'] = text
+                sess['error_encountered'] = false
+                var today = new Date()
+                sess['litmus_history'].unshift(JSON.parse('{ "type" : "Litmus Terminate", "TimeCompleted" : "' + 
+                today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+                +'", "status" : "Completed"}'))
+            } catch(err) {
+                sess['error_encountered'] = true
+                sess['json_type'] = 'Litmus Terminate'
+                sess['json_response'] = text
+                var today = new Date()
+                sess['litmus_history'].unshift(JSON.parse('{ "type" : "Litmus Terminate", "TimeCompleted" : "' + 
+                today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
+                +'", "status" : "Failed"}'))
+            }
+        })
+    }
+    
+    fetch_api().then(response => {
+        res.redirect('/aws/litmus_result')
+    })
+})
+
+router.get('/aws/litmus_result', (req, res) => {
+    res.render(path.join(__dirname , 'public', 'html', 'aws', 'litmus', 'result.ejs'), {
+        json_type : sess['json_type'],
+        json_response: sess['json_response'],
+        user_history : sess['litmus_history'],
+        error_encountered : sess['error_encountered']
+    })
+})
+
 router.get('/aws/ec2', (req, res) => {
     sess = req.session
     res.render(path.join(__dirname , 'public', 'html', 'aws', 'ec2', 'ec2.ejs'), {
