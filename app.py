@@ -4,7 +4,7 @@ import json
 import chaosaws.ec2.actions
 import chaosaws.ssm.actions
 import chaosaws.ec2.probes
-import sys, os
+import sys, os,subprocess,time
 
 app = Flask(__name__)
 
@@ -35,6 +35,19 @@ def home1():
         if record["service"] == "ssm":
             if record["exp"]== "send_command":
                 result = chaosaws.ssm.actions.send_command(record["document_name"],record["targets"],record["document_version"],record["parameters"],record["timeout_seconds"],record["max_concurrency"],record["max_error"])
+            print (result)
+        if record["service"] == "litmus":
+            if record["exp"]== "ec2_terminate":
+                result = subprocess.run(['minikube','start'])
+                time.sleep(2)
+                result += subprocess.run(['minikube','status'])
+                result += subprocess.run(['kubectl', 'apply', '-f','https://litmuschaos.github.io/litmus/litmus-operator-v1.13.8.yaml'])
+                result += subprocess.run(['kubectl', 'apply', '-f','https://hub.litmuschaos.io/api/chaos/1.13.8?file=charts/kube-aws/ec2-terminate-by-id/experiment.yaml'])
+                result += subprocess.run(['kubectl', 'apply', '-f','secrets.yml'])
+                result += subprocess.run(['kubectl', 'apply', '-f','rbac.yml'])
+                result += subprocess.run(['kubectl', 'apply', '-f','engine.yml'])
+                time.sleep(100)
+                result += subprocess.run(['minikube','stop'])
             print (result)
     except Exception as e:
         print (e.args)
