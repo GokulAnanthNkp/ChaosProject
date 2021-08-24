@@ -38,16 +38,17 @@ def home1():
             print (result)
         if record["service"] == "litmus":
             if record["exp"]== "ec2_terminate":
-                result = subprocess.run(['minikube','start'])
+                subprocess.run(['minikube','start'])
                 time.sleep(2)
-                result += subprocess.run(['minikube','status'])
-                result += subprocess.run(['kubectl', 'apply', '-f','https://litmuschaos.github.io/litmus/litmus-operator-v1.13.8.yaml'])
-                result += subprocess.run(['kubectl', 'apply', '-f','https://hub.litmuschaos.io/api/chaos/1.13.8?file=charts/kube-aws/ec2-terminate-by-id/experiment.yaml'])
-                result += subprocess.run(['kubectl', 'apply', '-f','secrets.yml'])
-                result += subprocess.run(['kubectl', 'apply', '-f','rbac.yml'])
-                result += subprocess.run(['kubectl', 'apply', '-f','engine.yml'])
-                time.sleep(100)
-                result += subprocess.run(['minikube','stop'])
+                subprocess.run(['minikube','status'])
+                subprocess.run(['kubectl', 'apply', '-f','https://litmuschaos.github.io/litmus/litmus-operator-v1.13.8.yaml'])
+                subprocess.run(['kubectl', 'apply', '-f','https://hub.litmuschaos.io/api/chaos/1.13.8?file=charts/kube-aws/ec2-terminate-by-id/experiment.yaml'])
+                subprocess.run(['kubectl', 'apply', '-f','/root/secrets.yml'])
+                subprocess.run(['kubectl', 'apply', '-f','/root/rbac.yml'])
+                subprocess.run(['kubectl', 'apply', '-f','/root/engine.yml'])
+                #time.sleep(100)
+                #subprocess.run(['minikube','stop'])
+                result = "Litmus EC2 Terminate executed successfully"
             print (result)
     except Exception as e:
         print (e.args)

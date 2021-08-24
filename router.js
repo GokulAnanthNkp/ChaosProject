@@ -111,9 +111,7 @@ router.post('/aws/auth', (req, res) => {
                         done = false
                     }
                 })
-                PythonShell.run(python_file, {args : [`${req.body.region}`]}, (err) => {
-                    if (err) throw err;
-                })
+               
                 sess['validation'] = false
             }
             else{
@@ -137,9 +135,7 @@ router.post('/aws/auth', (req, res) => {
             }
         }
         else{
-            PythonShell.run(python_file, {args : [`${sess['user_cred'][3].split(" ")[2]}`]}, (err) => {
-                if (err) throw err;
-            })
+            
             sess['validation'] = false
         }
         if (done) {
@@ -149,6 +145,7 @@ router.post('/aws/auth', (req, res) => {
     
     authenticate.then(function () {
         sess['user_history'] = []
+	sess['litmus_history'] = []
         sess['ssm_user_history'] = []
         if(!sess['validation']){
             res.redirect('/aws/auth_success')
@@ -176,7 +173,7 @@ router.post('/aws/auth_success', (req, res) => {
 router.get('/aws/litmus', (req, res) => {
     sess = req.session
     res.render(path.join(__dirname , 'public', 'html', 'aws', 'litmus', 'litmus.ejs'), {
-        user_history : sess['user_history']
+        litmus_history : sess['litmus_history']
     })
 })
 
@@ -205,7 +202,7 @@ router.get('/aws/litmus_ec2_terminate', (req, res) => {
     .then(() => {
         res.render(path.join(__dirname , 'public', 'html', 'aws', 'litmus', 'litmus_ec2_terminate.ejs'), {
             json_resp : sess['json_resp'],
-            user_history : sess['user_history']
+            litmus_history : sess['litmus_history']
         })
     })
     .catch(err => {
@@ -242,7 +239,7 @@ router.post('/aws/litmus_ec2_terminate', (req, res) => {
         .then(res => res.text())
         .then(text => {
             try {
-                const data = JSON.parse(text);
+		console.log(text)
                 sess['json_type'] = 'Litmus Terminate'
                 sess['json_response'] = text
                 sess['error_encountered'] = false
@@ -251,6 +248,7 @@ router.post('/aws/litmus_ec2_terminate', (req, res) => {
                 today.getHours().toString() + ':' + today.getMinutes().toString() + ':' + today.getSeconds().toString()
                 +'", "status" : "Completed"}'))
             } catch(err) {
+		console.log(err)
                 sess['error_encountered'] = true
                 sess['json_type'] = 'Litmus Terminate'
                 sess['json_response'] = text
@@ -271,7 +269,7 @@ router.get('/aws/litmus_result', (req, res) => {
     res.render(path.join(__dirname , 'public', 'html', 'aws', 'litmus', 'result.ejs'), {
         json_type : sess['json_type'],
         json_response: sess['json_response'],
-        user_history : sess['litmus_history'],
+        litmus_history : sess['litmus_history'],
         error_encountered : sess['error_encountered']
     })
 })
@@ -740,7 +738,7 @@ router.get('/aws/ssm_cpu_stress', (req, res) => {
     var params = {
         Filters: [{
             Name: 'iam-instance-profile.arn',
-            Values: ['arn:aws:iam::545530879553:instance-profile/EnablesEC2ToAccessSystemsManagerRole']
+            Values: ['arn:aws:iam::545351415800:instance-profile/ChaosSSM']
         }]
     }
     sess = req.session
@@ -833,7 +831,7 @@ router.get('/aws/ssm_mem_stress', (req, res) => {
     var params = {
         Filters: [{
             Name: 'iam-instance-profile.arn',
-            Values: ['arn:aws:iam::545530879553:instance-profile/EnablesEC2ToAccessSystemsManagerRole']
+            Values: ['arn:aws:iam::545351415800:instance-profile/ChaosSSM']
         }]
     }
     sess = req.session

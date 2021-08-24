@@ -216,7 +216,7 @@
                                 <% if(error_encountered){ %>
                                     <h3 style="color: red">Error encountered</h3>
                                 <% } else { %>
-                                    <% var frame_url = '<iframe src="http://localhost:3000/d-solo/WnyEJAmnz/dashboard-1?orgId=1&from=now-15m&to=now&theme=light&var-Instance=' + json_response.Command.Targets[0].Values[0] + '&refresh=5s&panelId=7"' %>
+                                    <% var frame_url = '<iframe src="http://ec2-13-233-152-142.ap-south-1.compute.amazonaws.com:3000/d-solo/WnyEJAmnz/dashboard-1?orgId=1&theme=light&var-Instance=' + json_response.Command.Targets[0].Values[0] + '&refresh=5s&panelId=7"' %>
                                     <%- frame_url %>
                                     <iframe width="450" height="200" frameborder="0"></iframe><br>
                                     Instance ID : <%= json_response.Command.Targets[0].Values[0] %><br>

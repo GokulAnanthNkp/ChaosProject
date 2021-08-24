@@ -231,17 +231,17 @@
                     </div>
                     <div class="card-body">
                         <ul class="products-list product-list-in-card pr-2">
-                            <% if(user_history.length > 0) { %>
-                                <% for(i in user_history) { %>
+                            <% if(litmus_history.length > 0) { %>
+                                <% for(i in litmus_history) { %>
                                     <li class="item">
                                         <div class="product-title">
-                                            <%= user_history[i].type %>
+                                            <%= litmus_history[i].type %>
                                             <span class="badge float-right">
-                                                <%= user_history[i].TimeCompleted %>
+                                                <%= litmus_history[i].TimeCompleted %>
                                             </span>
                                         </div>
                                         <div class="product-description">
-                                            <%= user_history[i].status %>
+                                            <%= litmus_history[i].status %>
                                         </div>
                                     </li>
                                 <% } %>

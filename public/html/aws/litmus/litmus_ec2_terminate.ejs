@@ -237,6 +237,13 @@
                     <div class="card-footer">
                         <a href="/aws/ec2" class="btn btn-default">Previous</a>
                         <button type="submit" class="btn btn-primary float-right">Next</>
+	   		<div style="z-index: 5000; display:none;" id="loadingDiv">
+    <table style="margin: 0px auto;">
+        <tr>
+            <td style="padding-top:200px;" align="center"><img src="https://www.punjabidharti.com/wp-content/plugins/wp-email/images/loading.gif" alt="loading image"/></td>
+        </tr>
+    </table>
+</div>
                     </div>
                 </form>
             </div>
@@ -248,17 +255,17 @@
                 </div>
                 <div class="card-body">
                     <ul class="products-list product-list-in-card pr-2">
-                        <% if(user_history.length > 0) { %>
-                            <% for(i in user_history) { %>
+                        <% if(litmus_history.length > 0) { %>
+                            <% for(i in litmus_history) { %>
                                 <li class="item">
                                     <div class="product-title">
-                                        <%= user_history[i].type %>
+                                        <%= litmus_history[i].type %>
                                         <span class="badge float-right">
-                                            <%= user_history[i].TimeCompleted %>
+                                            <%= litmus_history[i].TimeCompleted %>
                                         </span>
                                     </div>
                                     <div class="product-description">
-                                        <%= user_history[i].status %>
+                                        <%= litmus_history[i].status %>
                                     </div>
                                 </li>
                             <% } %>
@@ -292,7 +299,14 @@
 </script>
 <!-- Bootstrap 4 -->
 <script src="/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+<script>
+$('#usp_form').submit(function() {
+    // javascript way
+    document.getElementById("loadingDiv").style.display = 'block';
+    // jquery way
+    $('#loadingDiv').show();  
+});
+</script>
 <!-- JQVMap -->
 <script src="/public/plugins/jqvmap/jquery.vmap.min.js"></script>
 <script src="/public/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
